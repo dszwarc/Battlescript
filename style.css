@@ -1,0 +1,63 @@
+
+body {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 100px 500px 100px auto 200px;
+    height: 100vh;
+}
+
+#c-board {
+    table-layout: fixed;
+    display:flex;
+    justify-content: center;
+    grid-column: 2/3;
+    grid-row: 2/3;
+    border-spacing: 0px;
+}
+
+#p-board {
+    table-layout: fixed;
+    display:flex;
+    justify-content: center;
+    grid-column: 2/3;
+    grid-row: 4/5;
+    border-spacing: 0px;
+}
+
+tbody{
+    position: relative;
+    width: fixed;
+    height: fixed;
+}
+
+th {
+    padding: 10px;
+    margin: 10px;    
+}
+
+td {
+    border: 1px solid white;
+    width: 2.5em;
+    height: 2.5em;
+    background-color:rgb(75, 138, 201);
+}
+
+#one-ship{
+    background-color: grey;
+    width:2em;
+    height:2em;
+    margin: .25em;
+    cursor: move;
+    padding-top: -1em;
+}
+
+.dragging{
+    cursor: move;
+}
+
+#phase{
+    grid-row: 3/4;
+    grid-column: 2/3;
+    display: flex;
+    justify-content: center;
+}
