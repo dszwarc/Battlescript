@@ -9,6 +9,10 @@ body {
     background-color: rgb(255, 238, 0);
 }
 
+.miss{
+    background-color: white;
+}
+
 .board {
     background-color: aquamarine;
 }

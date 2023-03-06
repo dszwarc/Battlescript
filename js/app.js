@@ -1,9 +1,11 @@
 //Declare Variables
-
+const turnChoices = ['setup', 'player', 'computer', 'end-screen'];
+let turnStatus = turnChoices[1];
 //size of the board (size x size)
 const size = 10;
 
 //2D array holder for player and computer. initialized in init function
+//0 is empty cell, 1 is ship present, 2 is hit, 3 is miss
 let gridArray = {player: [[]],
     computer: [[]]
 }
@@ -31,30 +33,26 @@ const gridSpaces = {
 }
 
 //Event listener to highlight grid cells as you hover over them.
-for (y in gridSpaces){
-    for (let i = 0; i < gridSpaces[y].length; i++){
-        gridSpaces[y][i].addEventListener('mouseenter', function(e){
-            e.target.classList.add('hover');
-        },100);
-        gridSpaces[y][i].addEventListener('mouseout', function(e){
-            e.target.classList.remove('hover');
-        },100);
+if (turnStatus === 'setup'){
+    for (y in gridSpaces){
+        for (let i = 0; i < gridSpaces[y].length; i++){
+            gridSpaces[y][i].addEventListener('mouseenter', function(e){
+                e.target.classList.add('hover');
+            },100);
+            gridSpaces[y][i].addEventListener('mouseout', function(e){
+                e.target.classList.remove('hover');
+            },100);
+            gridSpaces[y][i].addEventListener('click', testclick)
+        }
     }
 }
-// gridSpaces.computer.addEventListener('mouseenter', function(e){
-//     e.target.classList.add('hover');
-// },100);
-// gridSpaces.computer.addEventListener('mouseout', function(e){
-//     e.target.classList.remove('hover');
-// },100);
-
 
 function testclick(evt){
     console.log(evt.target.id);
     evt.target.colorBackground = evt.target.colorBackground === 'rgb(75, 138, 201)' ? 'white' : 'rgb(75, 138, 201)';
 }
 
-
+render();
 //---------- Functions ------------//
 
 //initialize function
@@ -79,13 +77,38 @@ function init(){
     
 }
 
-//make all boats appear in dock
-//
+//render
+function render(){
+    const turnStatusEl = document.getElementById('phase');
+    if (turnStatus === 'setup'){
+        turnStatusEl.innerText = "SETUP PHASE"
+    } else if (turnStatus === 'player'){
+        turnStatusEl.innerText = "PLAYER'S TURN"
+    } else if (turnStatus === 'computer'){
+        turnStatusEl.innerText = "COMPUTER IS THINKING..."
+    } else {
+        turnStatusEl.innerText = `BLANK IS THE WINNER!`
+    }
+
+}
 
 
 
-function fire(){
+function turnLogic(){
     //check to make sure it's player's turn, else skip to "AI" section
+    if (turnStatus === 1){
+        for (y in gridSpaces){
+            for (let i = 0; i < gridSpaces[y].length; i++){
+                gridSpaces[y][i].addEventListener('mouseenter', function(e){
+                    e.target.classList.add('hover');
+                },100);
+                gridSpaces[y][i].addEventListener('mouseout', function(e){
+                    e.target.classList.remove('hover');
+                },100);
+                gridSpaces[y][i].addEventListener('click', clickBoard)
+            }
+        }
+    }
 
     //check location clicked on grid
     //if cell is !clicked,
@@ -93,6 +116,25 @@ function fire(){
     //if boat is present, report hit and mark boat as damaged
     //else, report miss and end turn
     //render
+
+function clickBoard(evt){
+    if (turnStatus === 'player'){
+        let gridId = evt.target.id;
+        let gridIdArray = gridId.id.split('');
+        let gridCompare = gridIdArray.computer[testIdArray[1]][testIdArray[0]]
+        if (gridCompare === 0){
+            gridIdArray.computer[testIdArray[1]][testIdArray[0]] = 3;
+            turnStatus = turnChoices[2];
+        } else if (gridCompare === 1){
+            gridIdArray.computer[testIdArray[1]][testIdArray[0]] = 3;
+            turnStatus = turnChoices[2];
+        } else {
+
+        }
+    } else if (turnStatus === 'computer'){
+        //write auto firing code
+    }
+}
 
     //AI
     //choose random cell and fire like above?
