@@ -11,7 +11,7 @@ body {
 }
 
 #c-board {
-    table-layout: auto;
+    table-layout: fixed;
     display:flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -22,7 +22,7 @@ body {
 }
 
 #p-board {
-    table-layout: auto;
+    table-layout: fixed;
     display:flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -51,13 +51,26 @@ td {
     background-color:rgb(75, 138, 201);
 }
 
-#one-ship{
+.ship{
     background-color: grey;
-    width:2em;
-    height:2em;
     margin: .25em;
     cursor: move;
     padding-top: -1em;
+}
+
+#destroyer{
+    width:30px;
+    height:120px;
+}
+
+#submarine{
+    width:30px;
+    height:120px;
+}
+
+#battleship{
+    width: 30px;
+    height: 210px;
 }
 
 .dragging{
