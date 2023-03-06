@@ -1,7 +1,14 @@
 //Declare Variables
 
-let size = 10;
+//size of the board (size x size)
+const size = 10;
 
+//2D array holder for player and computer. initialized in init function
+let gridArray = {player: [[]],
+    computer: [[]]
+}
+
+//Ship class to designate length and name of each ship
 class Ship {
     constructor(name, size){
         this.name = name;
@@ -9,13 +16,13 @@ class Ship {
     }
 }
 
-    const destroyer = new Ship('destroyer', 3);
-    const submarine = new Ship('submarine', 3);
-    const battleship = new Ship('battleship',4);
-    const ships = [];
-    ships.push(destroyer, submarine, battleship);
+const destroyer = new Ship('destroyer', 3);
+const submarine = new Ship('submarine', 3);
+const battleship = new Ship('battleship',4);
+const ships = [];
+ships.push(destroyer, submarine, battleship);
 
-
+init(size)
 
 const shipEls = document.querySelectorAll('.ship');
 const gridSpaces = {
@@ -23,46 +30,30 @@ const gridSpaces = {
     computer: document.querySelectorAll('#c-board td')
 }
 
-gridSpaces.player.addEventListener('mouseover', function(e){
-    e.target.style.backgroundColor = 'red'
-})
+//Event listener to highlight grid cells as you hover over them.
+for (y in gridSpaces){
+    for (let i = 0; i < gridSpaces[y].length; i++){
+        gridSpaces[y][i].addEventListener('mouseenter', function(e){
+            e.target.classList.add('hover');
+        },100);
+        gridSpaces[y][i].addEventListener('mouseout', function(e){
+            e.target.classList.remove('hover');
+        },100);
+    }
+}
+// gridSpaces.computer.addEventListener('mouseenter', function(e){
+//     e.target.classList.add('hover');
+// },100);
+// gridSpaces.computer.addEventListener('mouseout', function(e){
+//     e.target.classList.remove('hover');
+// },100);
 
-
-
-
-
-
-//Dragging functionality
-shipEls.forEach(ship =>{
-    ship.addEventListener('dragstart', () => {
-        ship.classList.add('dragging')
-    })
-})
-
-shipEls.forEach(ship =>{
-    ship.addEventListener('dragend',()=>{
-        ship.classList.remove('dragging')
-    })
-})
-
-// gridSpaces.forEach(grid =>{
-//     grid.addEventListener('dragover', e =>{
-//         //add prevent default to stop "unable" sign
-//         e.preventDefault;
-//         //store our element that is being dragged in a variable called ship
-//         const ship = document.querySelector('.dragging');
-//         //append our dragged element to the element we are currently dragging over
-//         grid.appendChild(ship)
-//     })
-// })
-//const click = document.querySelector('table').addEventListener('click', testclick)
 
 function testclick(evt){
     console.log(evt.target.id);
     evt.target.colorBackground = evt.target.colorBackground === 'rgb(75, 138, 201)' ? 'white' : 'rgb(75, 138, 201)';
 }
 
-init(size);
 
 //---------- Functions ------------//
 
@@ -70,11 +61,22 @@ init(size);
 //reappear dock, clear boards of hit/miss icons, replace turn indicator with "SET-UP PHASE"
 //
 
-function init(size){
-    generateTable('c-board', size);
-    generateTable('p-board', size);
+function init(){
+    //set each cell to 0 initially (empty class)
+    for (y in gridArray) {
+        for (let i = 0; i < size; i++){
+        gridArray[y][i] = [0];
+            for (let u = 0; u < size; u++){
+                gridArray[y][i][u]= 0;
+            }
+    }}
+    
+    generateTable('c-board', 'computer');
+    generateTable('p-board', 'player');
     generateShips();
 
+
+    
 }
 
 //make all boats appear in dock
@@ -125,17 +127,8 @@ function generateShips(){
 
 
 
-
-
-
-
-
-
-
-
-
 //This function is good to go
-function generateTable(tablename, size){
+function generateTable(tablename, player){
     //list all possible column titles
     const letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
     //create an HTML table elemend with the input name as an id
@@ -166,7 +159,16 @@ function generateTable(tablename, size){
         //inside each row, create `size` number of table datas with an id of u + (i*10)
         for (let u = 0; u < size; u++){
             let grid = document.createElement('td');
-            grid.classList.add('empty');
+            if(gridArray[player][u][i] === 0){
+                grid.classList.add('empty');
+            } else if (gridArray[player][u][i] === 1){
+                grid.classList.add('ship');
+            } else if (gridArray[player][u][i] === 2){
+                grid.classList.add('hit');
+            } else {
+                grid.classList.add('miss');
+            }
+            //iterate over an array and based on array value, assign a class
             grid.id = u + (i*size);
             row.appendChild(grid);
         }
@@ -174,4 +176,15 @@ function generateTable(tablename, size){
     }
     
     document.querySelector('body').appendChild(table)
+}
+
+//locating array index based on id value
+//id = row,column
+//split id string. then look at gridArrays[id[1]][id[0]]
+const testId = document.getElementById('57');
+const testIdArray = testId.id.split('');
+console.log(gridArray.player[testIdArray[1]][testIdArray[0]]);
+
+function placeShip(ship){
+
 }
