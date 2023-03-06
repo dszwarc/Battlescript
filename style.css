@@ -17,7 +17,7 @@ body {
     background-color: aquamarine;
 }
 
-#c-board {
+#computer {
     table-layout: fixed;
     display:flex;
     flex-wrap: wrap;
@@ -28,7 +28,7 @@ body {
     grid-column: 2/3;
 }
 
-#p-board {
+#player {
     table-layout: fixed;
     display:flex;
     flex-wrap: wrap;
@@ -89,4 +89,15 @@ td {
     grid-column: 2/3;
     display: flex;
     justify-content: center;
+}
+#shipyard{
+    background-color: rgb(37, 145, 42);
+    border: solid black 3px;
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    align-items: center;
+    grid-column: 3/4;
+    grid-row: 4/5;
+    margin:25px 75px 25px 75px;
 }

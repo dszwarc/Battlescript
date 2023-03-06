@@ -69,11 +69,11 @@ function init(){
             }
     }}
     
-    generateTable('c-board', 'computer');
-    generateTable('p-board', 'player');
+    generateTable('computer');
+    generateTable('player');
     generateShips();
 
-
+    render();
     
 }
 
@@ -89,26 +89,39 @@ function render(){
     } else {
         turnStatusEl.innerText = `BLANK IS THE WINNER!`
     }
-
+    for (y in gridArray){
+        gridArray[y].forEach(i => {
+            let location = gridArray 
+        })
+    }
 }
+// if(gridArray[tablename][u][i] === 0){
+            //     grid.classList.add('empty');
+            // } else if (gridArray[tablename][u][i] === 1){
+            //     grid.classList.add('ship');
+            // } else if (gridArray[tablename][u][i] === 2){
+            //     grid.classList.add('hit');
+            // } else {
+            //     grid.classList.add('miss');
+            // }
+            //iterate over an array and based on array value, assign a class
 
 
-
-function turnLogic(){
+//function turnLogic(){
     //check to make sure it's player's turn, else skip to "AI" section
-    if (turnStatus === 1){
-        for (y in gridSpaces){
-            for (let i = 0; i < gridSpaces[y].length; i++){
-                gridSpaces[y][i].addEventListener('mouseenter', function(e){
-                    e.target.classList.add('hover');
-                },100);
-                gridSpaces[y][i].addEventListener('mouseout', function(e){
-                    e.target.classList.remove('hover');
-                },100);
-                gridSpaces[y][i].addEventListener('click', clickBoard)
-            }
+if (turnStatus === 'player'){
+    for (y in gridSpaces){
+        for (let i = 0; i < gridSpaces[y].length; i++){
+            gridSpaces[y][i].addEventListener('mouseenter', function(e){
+                e.target.classList.add('hover');
+            },100);
+            gridSpaces[y][i].addEventListener('mouseout', function(e){
+                e.target.classList.remove('hover');
+            },100);
+            gridSpaces[y][i].addEventListener('click', clickBoard)
         }
     }
+}
 
     //check location clicked on grid
     //if cell is !clicked,
@@ -120,38 +133,58 @@ function turnLogic(){
 function clickBoard(evt){
     if (turnStatus === 'player'){
         let gridId = evt.target.id;
-        let gridIdArray = gridId.id.split('');
-        let gridCompare = gridIdArray.computer[testIdArray[1]][testIdArray[0]]
+        let gridIdArray;
+        if(gridId < 10){
+            gridIdArray = gridId.split('');
+            gridIdArray.unshift('0');
+        } else {
+            gridIdArray = gridId.split('');
+        }
+        console.log(gridIdArray);
+        console.log(gridIdArray[0],gridIdArray[1])
+        let gridCompare = gridArray.computer[gridIdArray[1]][gridIdArray[0]];
+        console.log(gridCompare);
         if (gridCompare === 0){
-            gridIdArray.computer[testIdArray[1]][testIdArray[0]] = 3;
+            gridArray.computer[gridIdArray[1]][gridIdArray[0]] = 3;
             turnStatus = turnChoices[2];
         } else if (gridCompare === 1){
-            gridIdArray.computer[testIdArray[1]][testIdArray[0]] = 3;
+            gridArray.computer[gridIdArray[1]][gridIdArray[0]] = 2;
             turnStatus = turnChoices[2];
         } else {
 
         }
     } else if (turnStatus === 'computer'){
         //write auto firing code
+        
+        do {
+            let computerFire = randomGrid();
+        } while (!emptyOrShip(computer,'player'))
+
+        if (gridArray.player[computerFire[0]][computerFire[1]] === 0){
+            gridArray.player[computerFire[0]][computerFire[1]] = 3;
+        } else {
+            gridArray.player[computerFire[0]][computerFire[1]] = 4;
+        }
     }
+    render();
 }
 
     //AI
     //choose random cell and fire like above?
-}
+
 
 //computer turn
 
 
-function RandomGridLoc(){
-    do {
-      const space = Math.floor(Math.random()*size*size);
-      const isEmpty = document.querySelector(`#${space}`).classList;
-    } while (isEmpty != 'empty');
-    console.log(space);
-    return space;
+function randomGrid(){
+    let row = Math.floor(Math.random()*size);
+    let column = Math.floor(Math.random()*size);
+    return [row,column];
 }
 
+function emptyOrShip(array,player){
+    return gridArray[player][array[1]][array[0]] === 0 || gridArray[player][array[1]][array[0]] === 1 ? true:false;
+}
 
 
 function generateShips(){
@@ -160,7 +193,7 @@ function generateShips(){
         shipEl.draggable = true;
         shipEl.classList.add('ship');
         shipEl.id = ship.name;
-        document.querySelector('body').appendChild(shipEl);
+        document.querySelector('#shipyard').appendChild(shipEl);
     })
 
 }
@@ -170,7 +203,7 @@ function generateShips(){
 
 
 //This function is good to go
-function generateTable(tablename, player){
+function generateTable(tablename){
     //list all possible column titles
     const letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
     //create an HTML table elemend with the input name as an id
@@ -201,16 +234,8 @@ function generateTable(tablename, player){
         //inside each row, create `size` number of table datas with an id of u + (i*10)
         for (let u = 0; u < size; u++){
             let grid = document.createElement('td');
-            if(gridArray[player][u][i] === 0){
-                grid.classList.add('empty');
-            } else if (gridArray[player][u][i] === 1){
-                grid.classList.add('ship');
-            } else if (gridArray[player][u][i] === 2){
-                grid.classList.add('hit');
-            } else {
-                grid.classList.add('miss');
-            }
-            //iterate over an array and based on array value, assign a class
+            grid.classList.add('empty');
+            
             grid.id = u + (i*size);
             row.appendChild(grid);
         }
@@ -223,9 +248,6 @@ function generateTable(tablename, player){
 //locating array index based on id value
 //id = row,column
 //split id string. then look at gridArrays[id[1]][id[0]]
-const testId = document.getElementById('57');
-const testIdArray = testId.id.split('');
-console.log(gridArray.player[testIdArray[1]][testIdArray[0]]);
 
 function placeShip(ship){
 
