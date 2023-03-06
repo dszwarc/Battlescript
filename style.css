@@ -6,22 +6,31 @@ body {
     height: 100vh;
 }
 
+.board {
+    background-color: aquamarine;
+}
+
 #c-board {
-    table-layout: fixed;
+    table-layout: auto;
     display:flex;
+    flex-wrap: wrap;
     justify-content: center;
-    grid-column: 2/3;
-    grid-row: 2/3;
+    align-items: center;
     border-spacing: 0px;
+    grid-row: 2/3;
+    grid-column: 2/3;
 }
 
 #p-board {
-    table-layout: fixed;
+    table-layout: auto;
     display:flex;
+    flex-wrap: wrap;
     justify-content: center;
+    align-items: center;
+    border-spacing: 0px;
+    grid-row: 2/3;
     grid-column: 2/3;
     grid-row: 4/5;
-    border-spacing: 0px;
 }
 
 tbody{

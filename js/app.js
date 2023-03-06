@@ -1,9 +1,10 @@
 //Declare Variables
 
 
+
 //Dragging functionality
 const ships = document.querySelectorAll('.ship');
-const gridSpaces = document.querySelectorAll('#c-board td')
+//const gridSpaces = document.querySelectorAll('#c-board td')
 
 ships.forEach(ship =>{
     ship.addEventListener('dragstart', () => {
@@ -17,36 +18,25 @@ ships.forEach(ship =>{
     })
 })
 
-gridSpaces.forEach(grid =>{
-    grid.addEventListener('dragover', e =>{
-        //add prevent default to stop "unable" sign
-        e.preventDefault;
-        //store our element that is being dragged in a variable called ship
-        const ship = document.querySelector('.dragging');
-        //append our dragged element to the element we are currently dragging over
-        grid.appendChild(ship)
-    })
-})
+// gridSpaces.forEach(grid =>{
+//     grid.addEventListener('dragover', e =>{
+//         //add prevent default to stop "unable" sign
+//         e.preventDefault;
+//         //store our element that is being dragged in a variable called ship
+//         const ship = document.querySelector('.dragging');
+//         //append our dragged element to the element we are currently dragging over
+//         grid.appendChild(ship)
+//     })
+// })
 
-const grid ={
-    player:{columns: ['A','B','C','D','E','F','G'],
-            rows:    [1, 2, 3, 4, 5, 6 ,7]
-        },
-    computer:{columns: ['A','B','C','D','E','F','G'],
-    rows:    [1, 2, 3, 4, 5, 6 ,7]
-    }
-}
-const board = {
-    player: document.querySelector('p-board'),
-    computer: document.querySelector('c-board')
-} 
-
-const click = document.querySelector('tbody').addEventListener('click', testclick)
+//const click = document.querySelector('table').addEventListener('click', testclick)
 
 function testclick(evt){
     console.log(evt.target.id);
     evt.target.colorBackground = evt.target.colorBackground === 'rgb(75, 138, 201)' ? 'white' : 'rgb(75, 138, 201)';
 }
+
+
 
 //---------- Functions ------------//
 
@@ -74,3 +64,58 @@ function fire(column , row){
 }
 
 //computer turn
+
+
+function RandomGridLoc(){
+    do {
+      const space = Math.floor(Math.random()*100);
+      const isEmpty = document.querySelector(`#${space}`).classList;
+    } while (isEmpty != 'empty');
+    console.log(space);
+    return space;
+}
+
+generateTable('c-board', 5);
+generateTable('p-board', 5);
+
+
+function generateTable(tablename, size){
+    //list all possible column titles
+    const letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+    //create an HTML table elemend with the input name as an id
+    const table = document.createElement('table');
+    const tBody = document.createElement('tbody');
+    table.id = tablename;
+    table.appendChild(tBody)
+    //table.classList.add('board');
+    
+    //create first row with letters for looks
+    const letterRow = document.createElement('tr')
+    const blankSpace = document.createElement('th')
+    blankSpace.textContent = '';
+    letterRow.appendChild(blankSpace);
+    for (let y = 0; y <= size-1; y++){
+        let legend = document.createElement('th');
+        legend.textContent = letters[y];
+        letterRow.appendChild(legend);  
+    }
+    tBody.appendChild(letterRow)
+    //create the number of rows requested
+    for (let i = 0; i < size; i++){
+        const row = document.createElement('tr');
+        //append a header for each row that acts as the left side numbers
+        const header = document.createElement('th');
+        header.textContent = (i+1);
+        row.appendChild(header)
+        //inside each row, create `size` number of table datas with an id of u + (i*10)
+        for (let u = 0; u < size; u++){
+            let grid = document.createElement('td');
+            grid.classList.add('empty');
+            grid.id = u;
+            row.appendChild(grid);
+        }
+        tBody.appendChild(row)
+    }
+    
+    document.querySelector('body').appendChild(table)
+}
