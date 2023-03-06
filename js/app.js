@@ -25,11 +25,11 @@ const ships = [];
 ships.push(destroyer, submarine, battleship);
 
 init(size)
-
+render();
 const shipEls = document.querySelectorAll('.ship');
 const gridSpaces = {
-    player: document.querySelectorAll('#p-board td'),
-    computer: document.querySelectorAll('#c-board td')
+    player: document.querySelectorAll('#player td'),
+    computer: document.querySelectorAll('#computer td')
 }
 
 //Event listener to highlight grid cells as you hover over them.
@@ -45,6 +45,20 @@ if (turnStatus === 'setup'){
             gridSpaces[y][i].addEventListener('click', testclick)
         }
     }
+} else if (turnStatus === 'player'){
+    for (y in gridSpaces){
+        for (let i = 0; i < gridSpaces[y].length; i++){
+            gridSpaces[y][i].addEventListener('mouseenter', function(e){
+                e.target.classList.add('hover');
+            },100);
+            gridSpaces[y][i].addEventListener('mouseout', function(e){
+                e.target.classList.remove('hover');
+            },100);
+            gridSpaces[y][i].addEventListener('click', clickBoard)
+        }
+    }
+} else if (turnStatus = 'computer'){
+    clickBoard();
 }
 
 function testclick(evt){
@@ -52,7 +66,6 @@ function testclick(evt){
     evt.target.colorBackground = evt.target.colorBackground === 'rgb(75, 138, 201)' ? 'white' : 'rgb(75, 138, 201)';
 }
 
-render();
 //---------- Functions ------------//
 
 //initialize function
@@ -72,8 +85,6 @@ function init(){
     generateTable('computer');
     generateTable('player');
     generateShips();
-
-    render();
     
 }
 
@@ -89,50 +100,37 @@ function render(){
     } else {
         turnStatusEl.innerText = `BLANK IS THE WINNER!`
     }
-    for (y in gridArray){
-        gridArray[y].forEach(i => {
-            let location = gridArray 
-        })
-    }
-}
-// if(gridArray[tablename][u][i] === 0){
-            //     grid.classList.add('empty');
-            // } else if (gridArray[tablename][u][i] === 1){
-            //     grid.classList.add('ship');
-            // } else if (gridArray[tablename][u][i] === 2){
-            //     grid.classList.add('hit');
-            // } else {
-            //     grid.classList.add('miss');
-            // }
-            //iterate over an array and based on array value, assign a class
-
-
-//function turnLogic(){
-    //check to make sure it's player's turn, else skip to "AI" section
-if (turnStatus === 'player'){
-    for (y in gridSpaces){
-        for (let i = 0; i < gridSpaces[y].length; i++){
-            gridSpaces[y][i].addEventListener('mouseenter', function(e){
-                e.target.classList.add('hover');
-            },100);
-            gridSpaces[y][i].addEventListener('mouseout', function(e){
-                e.target.classList.remove('hover');
-            },100);
-            gridSpaces[y][i].addEventListener('click', clickBoard)
+    
+    for (k in gridArray){
+        for (let i = 0 ; i<size ; i++){
+            for (let u = 0; u<size; u++){
+                let eleId;
+                if (i === 0){
+                    eleId = u;
+                } else {
+                    eleId = [i,u];
+                    eleId = eleId.join('');
+                }
+                if (gridArray[k][i][u]=== 0){
+                    document.getElementById(k.slice(0,1)+eleId).className = 'empty'
+                } else if (gridArray[k][i][u]=== 1){
+                    document.getElementById(k.slice(0,1)+eleId).className = 'ship'
+                } else if (gridArray[k][i][u]=== 2){
+                    document.getElementById(k.slice(0,1)+eleId).className = 'hit'
+                } else if (gridArray[k][i][u]=== 3){
+                document.getElementById(k.slice(0,1)+eleId).className = 'miss'
+                }
+            }
         }
     }
 }
 
-    //check location clicked on grid
-    //if cell is !clicked,
-    //check if there is a boat present
-    //if boat is present, report hit and mark boat as damaged
-    //else, report miss and end turn
-    //render
+//`#${k} > #${eleId}`
 
 function clickBoard(evt){
     if (turnStatus === 'player'){
         let gridId = evt.target.id;
+        gridId = gridId.slice(1);
         let gridIdArray;
         if(gridId < 10){
             gridIdArray = gridId.split('');
@@ -145,10 +143,10 @@ function clickBoard(evt){
         let gridCompare = gridArray.computer[gridIdArray[1]][gridIdArray[0]];
         console.log(gridCompare);
         if (gridCompare === 0){
-            gridArray.computer[gridIdArray[1]][gridIdArray[0]] = 3;
+            gridArray.computer[gridIdArray[0]][gridIdArray[1]] = 3;
             turnStatus = turnChoices[2];
         } else if (gridCompare === 1){
-            gridArray.computer[gridIdArray[1]][gridIdArray[0]] = 2;
+            gridArray.computer[gridIdArray[0]][gridIdArray[1]] = 2;
             turnStatus = turnChoices[2];
         } else {
 
@@ -169,13 +167,6 @@ function clickBoard(evt){
     render();
 }
 
-    //AI
-    //choose random cell and fire like above?
-
-
-//computer turn
-
-
 function randomGrid(){
     let row = Math.floor(Math.random()*size);
     let column = Math.floor(Math.random()*size);
@@ -185,7 +176,6 @@ function randomGrid(){
 function emptyOrShip(array,player){
     return gridArray[player][array[1]][array[0]] === 0 || gridArray[player][array[1]][array[0]] === 1 ? true:false;
 }
-
 
 function generateShips(){
     ships.forEach(ship =>{
@@ -197,10 +187,6 @@ function generateShips(){
     })
 
 }
-
-
-
-
 
 //This function is good to go
 function generateTable(tablename){
@@ -234,20 +220,17 @@ function generateTable(tablename){
         //inside each row, create `size` number of table datas with an id of u + (i*10)
         for (let u = 0; u < size; u++){
             let grid = document.createElement('td');
-            grid.classList.add('empty');
-            
-            grid.id = u + (i*size);
+            //grid.classList.add('empty');
+            grid.id = tablename.slice(0,1) + (u + (i*size));
+                
             row.appendChild(grid);
         }
         tBody.appendChild(row)
     }
     
     document.querySelector('body').appendChild(table)
-}
 
-//locating array index based on id value
-//id = row,column
-//split id string. then look at gridArrays[id[1]][id[0]]
+}
 
 function placeShip(ship){
 
