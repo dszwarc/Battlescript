@@ -5,8 +5,11 @@ body {
     grid-template-rows: 100px 500px 100px auto 200px;
     height: 100vh;
 }
-.hover {
-    background-color: rgb(255, 238, 0);
+
+#player .ship{
+    background-color: grey;
+    margin: .25em;
+    padding-top: -1em;
 }
 
 .miss{
@@ -19,6 +22,9 @@ body {
 
 .board {
     background-color: aquamarine;
+}
+.hover {
+    background-color: rgb(255, 238, 0);
 }
 
 #computer {
@@ -62,11 +68,7 @@ td {
     background-color:rgb(75, 138, 201);
 }
 
-.ship{
-    background-color: grey;
-    margin: .25em;
-    padding-top: -1em;
-}
+
 
 #destroyer{
     width:30px;

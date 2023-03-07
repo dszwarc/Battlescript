@@ -39,7 +39,10 @@ const gridSpaces = {
     player: document.querySelectorAll('#player td'),
     computer: document.querySelectorAll('#computer td')
 }
-
+const totalTargets = document.querySelectorAll('#computer .ship').length;
+let remainingComputerShipGrids = document.querySelectorAll('#computer .ship').length;
+let remainingPlayerShipGrids = document.querySelectorAll('#player .ship').length;
+render();
 // //Event listener to highlight grid cells as you hover over them.
 // if (turnStatus === 'setup'){
 //     for (y in gridSpaces){
@@ -107,9 +110,8 @@ function init(){
     generateTable('computer');
     generateTable('player');
     generateShips();
-    
-    render();
 }
+setupPhase();
 
 //render
 function render(){
@@ -125,12 +127,21 @@ function render(){
         addBattlePhaseEventListeners();
     } else if (turnStatus === 'computer'){
         turnStatusEl.innerText = "COMPUTER IS THINKING..."
-    } else {
-        turnStatusEl.innerText = `BLANK IS THE WINNER!`
+    } else if (turnStatus === 'end-screen'){
+        turnStatusEl.innerText = `${winner} IS THE WINNER!`
     }
    
     updateGridArray();
-    setupPhase();
+    remainingComputerShipGrids = document.querySelectorAll('#computer .ship').length;
+    remainingPlayerShipGrids = document.querySelectorAll('#player .ship').length;
+
+    if (remainingComputerShipGrids === 0){
+        winner = 'player';
+        turnStatus = 'end-screen';
+    } else if (remainingPlayerShipGrids === 0){
+        winner = 'computer';
+        turnStatus = 'end-screen';
+    }
 }
 
 function playerAttack(evt){
@@ -195,7 +206,8 @@ function emptyOrShip(array, player){
     return gridArray[player][array[0]][array[1]] === 0 || gridArray[player][array[0]][array[1]] === 1 ? true:false;
 }
 
-function emptyGrid(array, playerString){
+function emptyGrid(playerString){
+    let array;
     do {
         array = randomGrid();
     } while (gridArray[playerString][array[0]][array[1]] !== 0)
@@ -262,19 +274,22 @@ function trueFalse(){
 }
 
 function placeRandomShip(shipConst, playerString){
-    let playerPlacement = emptyGrid(randomGrid(),playerString)
+    const playerPlacement = emptyGrid(playerString)
     shipConst.isHorizontal = trueFalse();
-    gridArray[playerString][playerPlacement[0]][playerPlacement[1]] = 1;
-    if (shipConst.isHorizontal){
+    
+    if (shipConst.isHorizontal && (playerPlacement[1]+ shipConst.size) < 9){
+        gridArray[playerString][playerPlacement[0]][playerPlacement[1]] = 1;
         for(let i = 1; i <= shipConst.size; i++){
             gridArray[playerString][playerPlacement[0]][playerPlacement[1]+i] = 1;
         }
-    } else {
+    } else if (!shipConst.isHorizontal && (playerPlacement[0]+ shipConst.size) < 9){
+        gridArray[playerString][playerPlacement[0]][playerPlacement[1]] = 1;
         for(let i = 1; i <= shipConst.size; i++){
-            gridArray[playerString][playerPlacement[0]][playerPlacement[1]+(i*10)] = 1;
+            gridArray[playerString][playerPlacement[0]+i][playerPlacement[1]] = 1;
         }
+    } else {
+        placeRandomShip(shipConst, playerString)
     }
-    render();
 }
 
 function updateGridArray(){
@@ -315,8 +330,9 @@ function addBattlePhaseEventListeners(){
         }
 }
 
+function checkIfEmpty(array, playerString){
 
-
+}
 
 // //Event listener to highlight grid cells as you hover over them.
 // if (turnStatus === 'setup'){
@@ -365,7 +381,9 @@ function setupPhase(){
     if (turnStatus = 'setup'){
         ships.forEach(ship =>{
             placeRandomShip(ship,'computer');
+            placeRandomShip(ship,'player');
         })
-        render();
+        turnStatus = 'player'
     }
+    render();
 }
