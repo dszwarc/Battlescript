@@ -1,6 +1,6 @@
 //Declare Variables
 const turnChoices = ['setup', 'player', 'computer', 'end-screen'];
-let turnStatus = turnChoices[0];
+let turnStatus = turnChoices[1];
 //size of the board (size x size)
 const size = 10;
 
@@ -38,23 +38,23 @@ if (turnStatus === 'setup'){
         for (let i = 0; i < gridSpaces[y].length; i++){
             gridSpaces[y][i].addEventListener('mouseenter', function(e){
                 e.target.classList.add('hover');
-                let tempTest = e.target.id
-                console.log(tempTest, "this is the cell you're on")
-                tempTest = tempTest.slice(1);
-                tempTest = Number(tempTest)+1;
-                tempTest = tempTest.toString();
-                tempTest = 'c'+tempTest;
-                document.getElementById(tempTest).classList.add('hover');
+                // let tempTest = e.target.id
+                // console.log(tempTest, "this is the cell you're on")
+                // tempTest = tempTest.slice(1);
+                // tempTest = Number(tempTest)+1;
+                // tempTest = tempTest.toString();
+                // tempTest = 'c'+tempTest;
+                // document.getElementById(tempTest).classList.add('hover');
             },100);
             gridSpaces[y][i].addEventListener('mouseout', function(e){
                 e.target.classList.remove('hover');
-                let tempTest = e.target.id
-                console.log(tempTest, "this is the cell you're on")
-                tempTest = tempTest.slice(1);
-                tempTest = Number(tempTest)+1;
-                tempTest = tempTest.toString();
-                tempTest = 'c'+tempTest;
-                document.getElementById(tempTest).classList.remove('hover');
+                // let tempTest = e.target.id
+                // console.log(tempTest, "this is the cell you're on")
+                // tempTest = tempTest.slice(1);
+                // tempTest = Number(tempTest)+1;
+                // tempTest = tempTest.toString();
+                // tempTest = 'c'+tempTest;
+                // document.getElementById(tempTest).classList.remove('hover');
             },100);
             gridSpaces[y][i].addEventListener('click', testclick)
         }
@@ -72,7 +72,7 @@ if (turnStatus === 'setup'){
         }
     }
 } else if (turnStatus = 'computer'){
-    clickBoard();
+    computerTurn();
 }
 
 function testclick(evt){
@@ -140,7 +140,6 @@ function render(){
 }
 
 function clickBoard(evt){
-    if (turnStatus === 'player'){
         let gridId = evt.target.id;
         gridId = gridId.slice(1);
         let gridIdArray;
@@ -151,21 +150,28 @@ function clickBoard(evt){
             gridIdArray = gridId.split('');
         }
         console.log(gridIdArray);
-        console.log(gridIdArray[0],gridIdArray[1])
-        let gridCompare = gridArray.computer[gridIdArray[1]][gridIdArray[0]];
+        console.log(gridIdArray[0],gridIdArray[1]);
+        let gridCompare = gridArray.computer[gridIdArray[0]][gridIdArray[1]];
         console.log(gridCompare);
         if (gridCompare === 0){
             gridArray.computer[gridIdArray[0]][gridIdArray[1]] = 3;
+            computerTurn();
             turnStatus = turnChoices[2];
         } else if (gridCompare === 1){
             gridArray.computer[gridIdArray[0]][gridIdArray[1]] = 2;
+            computerTurn();
             turnStatus = turnChoices[2];
         } else {
 
         }
-    } else if (turnStatus === 'computer'){
+    
+    render();
+}
+
+function computerTurn(){
+    if (turnStatus === 'computer'){
         //write auto firing code
-            let computerFire;
+        let computerFire;
 
         do {
             computerFire = randomGrid();
@@ -177,9 +183,10 @@ function clickBoard(evt){
             gridArray.player[computerFire[0]][computerFire[1]] = 2;
         }
         turnStatus = turnChoices[1];
+        render();
+    } else {
+        setTimeout(computerTurn, 500);
     }
-    
-    render();
 }
 
 function randomGrid(){
