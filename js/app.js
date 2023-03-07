@@ -15,6 +15,7 @@ class Ship {
     constructor(name, size){
         this.name = name;
         this.size = size;
+        this.isHorizontal = true;
     }
 }
 
@@ -256,6 +257,17 @@ function generateTable(tablename){
 
 }
 
-function placeShip(ship){
+function placeRandomShip(ship, player){
+    let playerPlacement;
+    do {
+        playerPlacement = randomGrid();
+    } while (!emptyOrShip(playerPlacement, player))
 
+    gridArray[player][playerPlacement[0]][playerPlacement[1]] = 1;
+    if (ship.isHorizontal){
+        for(let i = 1; i <= ship.size; i++){
+            gridArray[player][playerPlacement[0]][playerPlacement[1]+i] = 1;
+        }
+    }
+    
 }
