@@ -1,6 +1,7 @@
 //Declare Variables
 const turnChoices = ['setup', 'player', 'computer', 'end-screen'];
-let turnStatus = turnChoices[1];
+let turnStatus;
+
 //size of the board (size x size)
 const size = 10;
 
@@ -19,62 +20,68 @@ class Ship {
     }
 }
 
-const destroyer = new Ship('destroyer', 3);
+const destroyer = new Ship('destroyer', 2);
+const cruiser = new Ship('cruiser', 3)
 const submarine = new Ship('submarine', 3);
 const battleship = new Ship('battleship',4);
+const carrier = new Ship('carrier',5);
 const ships = [];
-ships.push(destroyer, submarine, battleship);
+ships.push(destroyer, cruiser, submarine, battleship, carrier);
 
-init(size)
-render();
+//Declaring variable that will hold the status of what ship is being put down
+let setupPhaseStatus;
+const setupPhaseChoices = ['destroyer', 'cruiser', 'submarine', 'battleship', 'carrier'];
+
+init(size);
+
 const shipEls = document.querySelectorAll('.ship');
 const gridSpaces = {
     player: document.querySelectorAll('#player td'),
     computer: document.querySelectorAll('#computer td')
 }
 
-//Event listener to highlight grid cells as you hover over them.
-if (turnStatus === 'setup'){
-    for (y in gridSpaces){
-        for (let i = 0; i < gridSpaces[y].length; i++){
-            gridSpaces[y][i].addEventListener('mouseenter', function(e){
-                e.target.classList.add('hover');
-                // let tempTest = e.target.id
-                // console.log(tempTest, "this is the cell you're on")
-                // tempTest = tempTest.slice(1);
-                // tempTest = Number(tempTest)+1;
-                // tempTest = tempTest.toString();
-                // tempTest = 'c'+tempTest;
-                // document.getElementById(tempTest).classList.add('hover');
-            },100);
-            gridSpaces[y][i].addEventListener('mouseout', function(e){
-                e.target.classList.remove('hover');
-                // let tempTest = e.target.id
-                // console.log(tempTest, "this is the cell you're on")
-                // tempTest = tempTest.slice(1);
-                // tempTest = Number(tempTest)+1;
-                // tempTest = tempTest.toString();
-                // tempTest = 'c'+tempTest;
-                // document.getElementById(tempTest).classList.remove('hover');
-            },100);
-            gridSpaces[y][i].addEventListener('click', testclick)
-        }
-    }
-} else if (turnStatus === 'player'){
-    for (y in gridSpaces){
-        for (let i = 0; i < gridSpaces[y].length; i++){
-            gridSpaces[y][i].addEventListener('mouseenter', function(e){
-                e.target.classList.add('hover');
-            },100);
-            gridSpaces[y][i].addEventListener('mouseout', function(e){
-                e.target.classList.remove('hover');
-            },100);
-            gridSpaces[y][i].addEventListener('click', clickBoard)
-        }
-    }
-} else if (turnStatus = 'computer'){
-    computerTurn();
-}
+// //Event listener to highlight grid cells as you hover over them.
+// if (turnStatus === 'setup'){
+//     for (y in gridSpaces){
+//         for (let i = 0; i < gridSpaces[y].length; i++){
+//             gridSpaces[y][i].addEventListener('mouseenter', function(e){
+//                 e.target.classList.add('hover');
+//                 // let tempTest = e.target.id
+//                 // console.log(tempTest, "this is the cell you're on")
+//                 // tempTest = tempTest.slice(1);
+//                 // tempTest = Number(tempTest)+1;
+//                 // tempTest = tempTest.toString();
+//                 // tempTest = 'c'+tempTest;
+//                 // document.getElementById(tempTest).classList.add('hover');
+//             },100);
+//             gridSpaces[y][i].addEventListener('mouseout', function(e){
+//                 e.target.classList.remove('hover');
+//                 // let tempTest = e.target.id
+//                 // console.log(tempTest, "this is the cell you're on")
+//                 // tempTest = tempTest.slice(1);
+//                 // tempTest = Number(tempTest)+1;
+//                 // tempTest = tempTest.toString();
+//                 // tempTest = 'c'+tempTest;
+//                 // document.getElementById(tempTest).classList.remove('hover');
+//             },100);
+//             gridSpaces[y][i].addEventListener('click', testclick)
+//         }
+//     }
+// } else if (turnStatus === 'player'){
+//     for (y in gridSpaces){
+//         for (let i = 0; i < gridSpaces[y].length; i++){
+//             gridSpaces[y][i].addEventListener('mouseenter', function(e){
+//                 e.target.classList.add('hover');
+//             },100);
+//             gridSpaces[y][i].addEventListener('mouseout', function(e){
+//                 e.target.classList.remove('hover');
+//             },100);
+//             gridSpaces[y][i].addEventListener('click', clickBoard)
+//         }
+//     }
+// } else if (turnStatus = 'computer'){
+//     computerTurn();
+// }
 
 function testclick(evt){
     console.log(evt.target.id);
@@ -96,51 +103,36 @@ function init(){
                 gridArray[y][i][u]= 0;
             }
     }}
-    
+    turnStatus = turnChoices[0];
     generateTable('computer');
     generateTable('player');
     generateShips();
     
+    render();
 }
 
 //render
 function render(){
     const turnStatusEl = document.getElementById('phase');
+    const turnDescriptionEl = document.getElementById('turn-description')
     if (turnStatus === 'setup'){
         turnStatusEl.innerText = "SETUP PHASE"
+        if (setupPhaseStatus = 'destroyer'){
+
+        }
     } else if (turnStatus === 'player'){
         turnStatusEl.innerText = "PLAYER'S TURN"
+        battlePhase();
     } else if (turnStatus === 'computer'){
         turnStatusEl.innerText = "COMPUTER IS THINKING..."
     } else {
         turnStatusEl.innerText = `BLANK IS THE WINNER!`
     }
-    
-    for (k in gridArray){
-        for (let i = 0 ; i<size ; i++){
-            for (let u = 0; u<size; u++){
-                let eleId;
-                if (i === 0){
-                    eleId = u;
-                } else {
-                    eleId = [i,u];
-                    eleId = eleId.join('');
-                }
-                if (gridArray[k][i][u]=== 0){
-                    document.getElementById(k.slice(0,1)+eleId).className = 'empty'
-                } else if (gridArray[k][i][u]=== 1){
-                    document.getElementById(k.slice(0,1)+eleId).className = 'ship'
-                } else if (gridArray[k][i][u]=== 2){
-                    document.getElementById(k.slice(0,1)+eleId).className = 'hit'
-                } else if (gridArray[k][i][u]=== 3){
-                document.getElementById(k.slice(0,1)+eleId).className = 'miss'
-                }
-            }
-        }
-    }
+   
+    updateGridArray();
 }
 
-function clickBoard(evt){
+function playerAttack(evt){
         let gridId = evt.target.id;
         gridId = gridId.slice(1);
         let gridIdArray;
@@ -210,7 +202,6 @@ function generateShips(){
         shipEl.id = ship.name;
         document.querySelector('#shipyard').appendChild(shipEl);
     })
-
 }
 
 //This function is good to go
@@ -258,7 +249,7 @@ function generateTable(tablename){
 }
 
 function placeRandomShip(ship, player){
-    let playerPlacement;
+    let playerPlacement = randomEmptyGrid
     do {
         playerPlacement = randomGrid();
     } while (!emptyOrShip(playerPlacement, player))
@@ -271,3 +262,92 @@ function placeRandomShip(ship, player){
     }
     
 }
+
+
+function randomEmptyGrid (){
+
+}
+
+function updateGridArray(){
+    //Update table values
+    for (k in gridArray){
+        for (let i = 0 ; i<size ; i++){
+            for (let u = 0; u<size; u++){
+                let eleId;
+                if (i === 0){
+                    eleId = u;
+                } else {
+                    eleId = [i,u];
+                    eleId = eleId.join('');
+                }
+                if (gridArray[k][i][u]=== 0){
+                    document.getElementById(k.slice(0,1)+eleId).className = 'empty'
+                } else if (gridArray[k][i][u]=== 1){
+                    document.getElementById(k.slice(0,1)+eleId).className = 'ship'
+                } else if (gridArray[k][i][u]=== 2){
+                    document.getElementById(k.slice(0,1)+eleId).className = 'hit'
+                } else if (gridArray[k][i][u]=== 3){
+                document.getElementById(k.slice(0,1)+eleId).className = 'miss'
+                }
+            }
+        }
+    }
+}
+
+function battlePhase(){
+        for (let i = 0; i < gridSpaces.computer.length; i++){
+            gridSpaces.computer[i].addEventListener('mouseenter', function(e){
+                e.target.classList.add('hover');
+            },100);
+            gridSpaces.computer[i].addEventListener('mouseout', function(e){
+                e.target.classList.remove('hover');
+            },100);
+            gridSpaces.computer[i].addEventListener('click', playerAttack)
+        }
+}
+
+
+
+
+// //Event listener to highlight grid cells as you hover over them.
+// if (turnStatus === 'setup'){
+//     for (y in gridSpaces){
+//         for (let i = 0; i < gridSpaces[y].length; i++){
+//             gridSpaces[y][i].addEventListener('mouseenter', function(e){
+//                 e.target.classList.add('hover');
+//                 // let tempTest = e.target.id
+//                 // console.log(tempTest, "this is the cell you're on")
+//                 // tempTest = tempTest.slice(1);
+//                 // tempTest = Number(tempTest)+1;
+//                 // tempTest = tempTest.toString();
+//                 // tempTest = 'c'+tempTest;
+//                 // document.getElementById(tempTest).classList.add('hover');
+//             },100);
+//             gridSpaces[y][i].addEventListener('mouseout', function(e){
+//                 e.target.classList.remove('hover');
+//                 // let tempTest = e.target.id
+//                 // console.log(tempTest, "this is the cell you're on")
+//                 // tempTest = tempTest.slice(1);
+//                 // tempTest = Number(tempTest)+1;
+//                 // tempTest = tempTest.toString();
+//                 // tempTest = 'c'+tempTest;
+//                 // document.getElementById(tempTest).classList.remove('hover');
+//             },100);
+//             gridSpaces[y][i].addEventListener('click', testclick)
+//         }
+//     }
+// } else if (turnStatus === 'player'){
+//     for (y in gridSpaces){
+//         for (let i = 0; i < gridSpaces[y].length; i++){
+//             gridSpaces[y][i].addEventListener('mouseenter', function(e){
+//                 e.target.classList.add('hover');
+//             },100);
+//             gridSpaces[y][i].addEventListener('mouseout', function(e){
+//                 e.target.classList.remove('hover');
+//             },100);
+//             gridSpaces[y][i].addEventListener('click', clickBoard)
+//         }
+//     }
+// } else if (turnStatus = 'computer'){
+//     computerTurn();
+// }
