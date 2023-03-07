@@ -122,7 +122,7 @@ function render(){
         }
     } else if (turnStatus === 'player'){
         turnStatusEl.innerText = "PLAYER'S TURN"
-        battlePhase();
+        addBattlePhaseEventListeners();
     } else if (turnStatus === 'computer'){
         turnStatusEl.innerText = "COMPUTER IS THINKING..."
     } else {
@@ -130,6 +130,7 @@ function render(){
     }
    
     updateGridArray();
+    setupPhase();
 }
 
 function playerAttack(evt){
@@ -190,8 +191,15 @@ function randomGrid(){
     return [row,column];
 }
 
-function emptyOrShip(array,player){
+function emptyOrShip(array, player){
     return gridArray[player][array[0]][array[1]] === 0 || gridArray[player][array[0]][array[1]] === 1 ? true:false;
+}
+
+function emptyGrid(array, playerString){
+    do {
+        array = randomGrid();
+    } while (gridArray[playerString][array[0]][array[1]] !== 0)
+    return array;
 }
 
 function generateShips(){
@@ -248,24 +256,25 @@ function generateTable(tablename){
 
 }
 
-function placeRandomShip(ship, player){
-    let playerPlacement = randomEmptyGrid
-    do {
-        playerPlacement = randomGrid();
-    } while (!emptyOrShip(playerPlacement, player))
-
-    gridArray[player][playerPlacement[0]][playerPlacement[1]] = 1;
-    if (ship.isHorizontal){
-        for(let i = 1; i <= ship.size; i++){
-            gridArray[player][playerPlacement[0]][playerPlacement[1]+i] = 1;
-        }
-    }
-    
+function trueFalse(){
+    let test = Math.random();
+    return test < .5 ? true : false;
 }
 
-
-function randomEmptyGrid (){
-
+function placeRandomShip(shipConst, playerString){
+    let playerPlacement = emptyGrid(randomGrid(),playerString)
+    shipConst.isHorizontal = trueFalse();
+    gridArray[playerString][playerPlacement[0]][playerPlacement[1]] = 1;
+    if (shipConst.isHorizontal){
+        for(let i = 1; i <= shipConst.size; i++){
+            gridArray[playerString][playerPlacement[0]][playerPlacement[1]+i] = 1;
+        }
+    } else {
+        for(let i = 1; i <= shipConst.size; i++){
+            gridArray[playerString][playerPlacement[0]][playerPlacement[1]+(i*10)] = 1;
+        }
+    }
+    render();
 }
 
 function updateGridArray(){
@@ -294,7 +303,7 @@ function updateGridArray(){
     }
 }
 
-function battlePhase(){
+function addBattlePhaseEventListeners(){
         for (let i = 0; i < gridSpaces.computer.length; i++){
             gridSpaces.computer[i].addEventListener('mouseenter', function(e){
                 e.target.classList.add('hover');
@@ -351,3 +360,12 @@ function battlePhase(){
 // } else if (turnStatus = 'computer'){
 //     computerTurn();
 // }
+
+function setupPhase(){
+    if (turnStatus = 'setup'){
+        ships.forEach(ship =>{
+            placeRandomShip(ship,'computer');
+        })
+        render();
+    }
+}

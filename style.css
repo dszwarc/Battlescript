@@ -65,7 +65,6 @@ td {
 .ship{
     background-color: grey;
     margin: .25em;
-    cursor: move;
     padding-top: -1em;
 }
 
