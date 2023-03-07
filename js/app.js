@@ -1,6 +1,6 @@
 //Declare Variables
 const turnChoices = ['setup', 'player', 'computer', 'end-screen'];
-let turnStatus = turnChoices[1];
+let turnStatus = turnChoices[0];
 //size of the board (size x size)
 const size = 10;
 
@@ -38,9 +38,23 @@ if (turnStatus === 'setup'){
         for (let i = 0; i < gridSpaces[y].length; i++){
             gridSpaces[y][i].addEventListener('mouseenter', function(e){
                 e.target.classList.add('hover');
+                let tempTest = e.target.id
+                console.log(tempTest, "this is the cell you're on")
+                tempTest = tempTest.slice(1);
+                tempTest = Number(tempTest)+1;
+                tempTest = tempTest.toString();
+                tempTest = 'c'+tempTest;
+                document.getElementById(tempTest).classList.add('hover');
             },100);
             gridSpaces[y][i].addEventListener('mouseout', function(e){
                 e.target.classList.remove('hover');
+                let tempTest = e.target.id
+                console.log(tempTest, "this is the cell you're on")
+                tempTest = tempTest.slice(1);
+                tempTest = Number(tempTest)+1;
+                tempTest = tempTest.toString();
+                tempTest = 'c'+tempTest;
+                document.getElementById(tempTest).classList.remove('hover');
             },100);
             gridSpaces[y][i].addEventListener('click', testclick)
         }
@@ -125,8 +139,6 @@ function render(){
     }
 }
 
-//`#${k} > #${eleId}`
-
 function clickBoard(evt){
     if (turnStatus === 'player'){
         let gridId = evt.target.id;
@@ -153,28 +165,33 @@ function clickBoard(evt){
         }
     } else if (turnStatus === 'computer'){
         //write auto firing code
-        
+            let computerFire;
+
         do {
-            let computerFire = randomGrid();
-        } while (!emptyOrShip(computer,'player'))
+            computerFire = randomGrid();
+        } while (!emptyOrShip(computerFire,'player'))
 
         if (gridArray.player[computerFire[0]][computerFire[1]] === 0){
             gridArray.player[computerFire[0]][computerFire[1]] = 3;
         } else {
-            gridArray.player[computerFire[0]][computerFire[1]] = 4;
+            gridArray.player[computerFire[0]][computerFire[1]] = 2;
         }
+        turnStatus = turnChoices[1];
     }
+    
     render();
 }
 
 function randomGrid(){
     let row = Math.floor(Math.random()*size);
     let column = Math.floor(Math.random()*size);
+    console.log(row);
+    console.log(column);
     return [row,column];
 }
 
 function emptyOrShip(array,player){
-    return gridArray[player][array[1]][array[0]] === 0 || gridArray[player][array[1]][array[0]] === 1 ? true:false;
+    return gridArray[player][array[0]][array[1]] === 0 || gridArray[player][array[0]][array[1]] === 1 ? true:false;
 }
 
 function generateShips(){
