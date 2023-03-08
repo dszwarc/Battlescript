@@ -1,5 +1,5 @@
 //Declare Variables
-const turnChoices = ['setup', 'player', 'computer', 'end-screen'];
+const turnChoices = ['setup', 'player', 'computer', 'end-screen', 'start-screen'];
 let turnStatus;
 
 //size of the board (size x size)
@@ -109,39 +109,39 @@ function init(){
     turnStatus = turnChoices[0];
     generateTable('computer');
     generateTable('player');
-    //generateShips();
 }
 setupPhase();
 
 //render
 function render(){
+    updateGridArray();
+    remainingComputerShipGrids = document.querySelectorAll('#computer .ship').length;
+    remainingPlayerShipGrids = document.querySelectorAll('#player .ship').length;
     const turnStatusEl = document.getElementById('phase');
     const turnDescriptionEl = document.getElementById('turn-description')
     if (turnStatus === 'setup'){
         turnStatusEl.innerText = "SETUP PHASE"
-        if (setupPhaseStatus = 'destroyer'){
-
-        }
     } else if (turnStatus === 'player'){
-        turnStatusEl.innerText = "PLAYER'S TURN"
-        addBattlePhaseEventListeners();
+        if (remainingPlayerShipGrids === 0){
+            winner = 'computer';
+            turnStatus = 'end-screen';
+        } else {
+            turnStatusEl.innerText = "PLAYER'S TURN"
+            addBattlePhaseEventListeners();
+        }
     } else if (turnStatus === 'computer'){
-        turnStatusEl.innerText = "COMPUTER IS THINKING..."
+        if (remainingComputerShipGrids === 0){
+            winner = 'player';
+            turnStatus = 'end-screen';
+        } else {
+            turnStatusEl.innerText = "COMPUTER IS THINKING..."
+        }
     } else if (turnStatus === 'end-screen'){
         turnStatusEl.innerText = `${winner.toUpperCase()} WINS!`
     }
    
-    updateGridArray();
-    remainingComputerShipGrids = document.querySelectorAll('#computer .ship').length;
-    remainingPlayerShipGrids = document.querySelectorAll('#player .ship').length;
-
-    if (remainingComputerShipGrids === 0){
-        winner = 'player';
-        turnStatus = 'end-screen';
-    } else if (remainingPlayerShipGrids === 0){
-        winner = 'computer';
-        turnStatus = 'end-screen';
-    }
+    
+ 
 }
 
 function playerAttack(evt){
@@ -214,16 +214,6 @@ function emptyGrid(playerString){
     } while (gridArray[playerString][array[0]][array[1]] !== 0)
     return array;
 }
-
-// function generateShips(){
-//     ships.forEach(ship =>{
-//         const shipEl = document.createElement('div');
-//         shipEl.draggable = true;
-//         shipEl.classList.add('ship');
-//         shipEl.id = ship.name;
-//         document.querySelector('#shipyard').appendChild(shipEl);
-//     })
-// }
 
 //This function is good to go
 function generateTable(tablename){
@@ -398,6 +388,7 @@ function checkIfValidLocation(array, playerString, ship){
 function setupPhase(){
     const shipyardEl = document.createElement('div');
     shipyardEl.id = 'shipyard';
+    document.querySelector('body').appendChild(shipyardEl);
     const randomButtonEl = document.createElement('button');
     randomButtonEl.id = 'randomize-player';
     randomButtonEl.textContent = "RANDOMIZE YOUR FLEET'S LOCATION";
@@ -411,6 +402,8 @@ function setupPhase(){
 
     submitButtonEl.addEventListener('click', function(){
         turnStatus = 'player';
+        document.querySelector('body').removeChild(shipyardEl);
+        render();
     })
     render();
 }
@@ -426,9 +419,19 @@ function setupRandomComputer(){
 
 function setupPlayerPhase(){
     if (turnStatus = 'setup'){
+        clearUserShips('player')
         ships.forEach(ship =>{
             placeRandomShip(ship,'player');
         })
     }
     render();
+}
+
+function clearUserShips(player){
+    for (let i = 0; i < size; i++){
+        gridArray[player][i] = [0];
+            for (let u = 0; u < size; u++){
+                gridArray[player][i][u]= 0;
+            }
+        }
 }
