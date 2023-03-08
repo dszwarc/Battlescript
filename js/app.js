@@ -31,7 +31,7 @@ ships.push(destroyer, cruiser, submarine, battleship, carrier);
 //Declaring variable that will hold the status of what ship is being put down
 let setupPhaseStatus;
 const setupPhaseChoices = ['destroyer', 'cruiser', 'submarine', 'battleship', 'carrier'];
-
+let winner = null;
 init(size);
 
 const shipEls = document.querySelectorAll('.ship');
@@ -128,7 +128,7 @@ function render(){
     } else if (turnStatus === 'computer'){
         turnStatusEl.innerText = "COMPUTER IS THINKING..."
     } else if (turnStatus === 'end-screen'){
-        turnStatusEl.innerText = `${winner} IS THE WINNER!`
+        turnStatusEl.innerText = `${winner.toUpperCase()} WINS!`
     }
    
     updateGridArray();
@@ -190,6 +190,7 @@ function computerTurn(){
         turnStatus = turnChoices[1];
         render();
     } else {
+        render();
         setTimeout(computerTurn, 500);
     }
 }
@@ -378,12 +379,29 @@ function checkIfEmpty(array, playerString){
 // }
 
 function setupPhase(){
+    setupRandomComputer();
+    setupPlayerPhase();
+    render();
+}
+
+function setupRandomComputer(){ 
     if (turnStatus = 'setup'){
         ships.forEach(ship =>{
             placeRandomShip(ship,'computer');
-            placeRandomShip(ship,'player');
         })
-        turnStatus = 'player'
     }
     render();
+}
+
+function setupPlayerPhase(){
+    if (turnStatus = 'setup'){
+        ships.forEach(ship =>{
+            placeRandomShip(ship,'player');
+        })
+    }
+    render();
+}
+
+function acceptLayout(){
+    turnStatus = 'player';
 }
