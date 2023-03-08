@@ -29,7 +29,7 @@ const ships = [];
 ships.push(destroyer, cruiser, submarine, battleship, carrier);
 
 //Declaring variable that will hold the status of what ship is being put down
-let setupPhaseStatus;
+let setupPhaseStatus = 0;
 const setupPhaseChoices = ['destroyer', 'cruiser', 'submarine', 'battleship', 'carrier'];
 let winner = null;
 init(size);
@@ -86,17 +86,9 @@ render();
 //     computerTurn();
 // }
 
-function testclick(evt){
-    console.log(evt.target.id);
-    evt.target.colorBackground = evt.target.colorBackground === 'rgb(75, 138, 201)' ? 'white' : 'rgb(75, 138, 201)';
-}
-
 //---------- Functions ------------//
 
 //initialize function
-//reappear dock, clear boards of hit/miss icons, replace turn indicator with "SET-UP PHASE"
-//
-
 function init(){
     //set each cell to 0 initially (empty class)
     for (y in gridArray) {
@@ -106,7 +98,8 @@ function init(){
                 gridArray[y][i][u]= 0;
             }
     }}
-    turnStatus = turnChoices[0];
+    turnStatus = 'setup';
+    setupPhaseStatus = 0;
     generateTable('computer');
     generateTable('player');
 }
@@ -140,8 +133,6 @@ function render(){
         turnStatusEl.innerText = `${winner.toUpperCase()} WINS!`
     }
    
-    
- 
 }
 
 function playerAttack(evt){
@@ -154,10 +145,7 @@ function playerAttack(evt){
         } else {
             gridIdArray = gridId.split('');
         }
-        console.log(gridIdArray);
-        console.log(gridIdArray[0],gridIdArray[1]);
         let gridCompare = gridArray.computer[gridIdArray[0]][gridIdArray[1]];
-        console.log(gridCompare);
         if (gridCompare === 0){
             gridArray.computer[gridIdArray[0]][gridIdArray[1]] = 3;
             computerTurn();
@@ -198,8 +186,6 @@ function computerTurn(){
 function randomGrid(){
     let row = Math.floor(Math.random()*size);
     let column = Math.floor(Math.random()*size);
-    console.log(row);
-    console.log(column);
     return [row,column];
 }
 
@@ -327,18 +313,19 @@ function addBattlePhaseEventListeners(){
 function checkIfValidLocation(array, playerString, ship){
     let allEmpty = true;
     if (ship.isHorizontal && (array[1]+ ship.size < 9)){
-        for (let i = 1; i < ship.size; i++){
+        for (let i = 0; i < ship.size; i++){
             if ((gridArray[playerString][array[0]][(array[1]+i)]) !== 0){
                 allEmpty = false;
             } 
         }
     } else if (!ship.isHorizontal && (array[0] + ship.size < 9)){
-        for (let i = 1; i < ship.size; i++){
+        for (let i = 0; i < ship.size; i++){
             if ((gridArray[playerString][(array[0]+i)][array[1]]) !== 0){
                 allEmpty = false;
             } 
         }
     }
+    console.log(allEmpty);
     return allEmpty;
 }
 
@@ -386,6 +373,15 @@ function checkIfValidLocation(array, playerString, ship){
 // }
 
 function setupPhase(){
+    createSetupControls();
+    setupRandomComputer();
+    randomButtonEl.addEventListener('click', setupPlayerPhase);
+    submitButtonEl.addEventListener('click', moveToBattle);
+    document.querySelector('#player').addEventListener('click', placeShipManual);
+    render();
+}
+
+function createSetupControls(){
     const shipyardEl = document.createElement('div');
     shipyardEl.id = 'shipyard';
     document.querySelector('body').appendChild(shipyardEl);
@@ -397,15 +393,8 @@ function setupPhase(){
     submitButtonEl.textContent = "SUBMIT YOUR FLEET'S CURRENT LOCATIONS";
     shipyardEl.appendChild(randomButtonEl);
     shipyardEl.appendChild(submitButtonEl);
-    setupRandomComputer();
-    randomButtonEl.addEventListener('click',setupPlayerPhase);
-
-    submitButtonEl.addEventListener('click', function(){
-        turnStatus = 'player';
-        document.querySelector('body').removeChild(shipyardEl);
-        render();
-    })
-    render();
+    const resetButton = document.createElement('button');
+    resetButton.addEventListener('click', clearUserShips);
 }
 
 function setupRandomComputer(){ 
@@ -427,11 +416,84 @@ function setupPlayerPhase(){
     render();
 }
 
-function clearUserShips(player){
+function clearUserShips(){
     for (let i = 0; i < size; i++){
-        gridArray[player][i] = [0];
+        gridArray.player[i] = [0];
             for (let u = 0; u < size; u++){
-                gridArray[player][i][u]= 0;
+                gridArray.player[i][u]= 0;
             }
         }
+}
+
+function createBattleInfo(){
+        const computerRemainingEl = document.createElement('div');
+        const shotsTakenEl = document.createElement('div');
+        computerRemainingEl.id = 'computer-remaining';
+        computerRemainingEl.textContent = `GRIDS STILL CONTAINING ENEMY SHIPS: ${remainingComputerShipGrids}`
+
+}
+
+function updateBattleInfo(){
+    computerRemainingEl.textContent = `GRIDS STILL CONTAINING ENEMY SHIPS: ${remainingComputerShipGrids}`
+}
+
+function moveToBattle(){
+    turnStatus = 'player';
+    document.querySelector('body').removeChild(document.querySelector('#shipyard'));
+    render();
+}
+
+// function placeShipManual(){
+//     if (setupPhaseStatus <= 6){
+//     const playerPlacement = e.target.id;
+//     playerPlacement = playerPlacement.slice(1).split('');
+//     if (checkIfValidLocation(playerPlacement, 'player', ships[setupPhaseStatus])){
+//         if (ships[setupPhaseStatus].isHorizontal && (playerPlacement[1]+ ships[setupPhaseStatus].size < 9)){
+//             gridArray.player[playerPlacement[0]][playerPlacement[1]] = 1;
+//             for(let i = 1; i <= ships[setupPhaseStatus].size; i++){
+//                 gridArray.player[playerPlacement[0]][playerPlacement[1]+i] = 1;
+//             }
+//         } else if (!ships[setupPhaseStatus].isHorizontal && (playerPlacement[0]+ ships[setupPhaseStatus].size < 9)){
+//             gridArray.player[playerPlacement[0]][playerPlacement[1]] = 1;
+//             for(let i = 1; i <= ships[setupPhaseStatus].size; i++){
+//                 gridArray.player[playerPlacement[0]+i][playerPlacement[1]] = 1;
+//             }
+//         } else {
+//             placeShipManual()
+//         }
+//     } else {
+//         placeShipManual()
+//     }
+//     turnStatus = 'player';
+//     render();
+// }
+// }
+
+function placeShipManual(evt){
+    if (setupPhaseStatus <6){
+        const playerPlacement = evt.target.id.split('').slice(1);
+        let row = Number(playerPlacement[0]);
+        let column = Number(playerPlacement[1]);
+        let currentShip = ships[setupPhaseStatus];
+        if (checkIfValidLocation([row, column], 'player', ships[setupPhaseStatus])){
+            if (currentShip.isHorizontal && column + currentShip.size < 10){
+                gridArray.player[row][column] = 1;
+                setupPhaseStatus += 1;
+                for(let i = 1; i <= currentShip.size; i++){
+                    gridArray.player[row][column+i] = 1;
+                }
+            } else if (!currentShip.isHorizontal && row + currentShip.size < 10){
+                gridArray.player[row][column] = 1;
+                setupPhaseStatus += 1;
+                for(let i = 1; i <= currentShip.size; i++){
+                    gridArray.player[row+i][column] = 1;
+                }
+            } else {
+  
+            }
+        } else {
+            
+        }
+    }
+    render();
 }
