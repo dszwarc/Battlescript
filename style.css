@@ -6,7 +6,7 @@ body {
     height: 100vh;
 }
 
-#player .ship{
+.ship{
     background-color: grey;
     margin: .25em;
     padding-top: -1em;

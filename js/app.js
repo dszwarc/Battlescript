@@ -109,7 +109,7 @@ function init(){
     turnStatus = turnChoices[0];
     generateTable('computer');
     generateTable('player');
-    generateShips();
+    //generateShips();
 }
 setupPhase();
 
@@ -187,11 +187,11 @@ function computerTurn(){
         } else {
             gridArray.player[computerFire[0]][computerFire[1]] = 2;
         }
-        turnStatus = turnChoices[1];
+        turnStatus = 'player';
         render();
     } else {
         render();
-        setTimeout(computerTurn, 500);
+        setTimeout(computerTurn, 750);
     }
 }
 
@@ -215,15 +215,15 @@ function emptyGrid(playerString){
     return array;
 }
 
-function generateShips(){
-    ships.forEach(ship =>{
-        const shipEl = document.createElement('div');
-        shipEl.draggable = true;
-        shipEl.classList.add('ship');
-        shipEl.id = ship.name;
-        document.querySelector('#shipyard').appendChild(shipEl);
-    })
-}
+// function generateShips(){
+//     ships.forEach(ship =>{
+//         const shipEl = document.createElement('div');
+//         shipEl.draggable = true;
+//         shipEl.classList.add('ship');
+//         shipEl.id = ship.name;
+//         document.querySelector('#shipyard').appendChild(shipEl);
+//     })
+// }
 
 //This function is good to go
 function generateTable(tablename){
@@ -277,16 +277,19 @@ function trueFalse(){
 function placeRandomShip(shipConst, playerString){
     const playerPlacement = emptyGrid(playerString)
     shipConst.isHorizontal = trueFalse();
-    
-    if (shipConst.isHorizontal && (playerPlacement[1]+ shipConst.size) < 9){
-        gridArray[playerString][playerPlacement[0]][playerPlacement[1]] = 1;
-        for(let i = 1; i <= shipConst.size; i++){
-            gridArray[playerString][playerPlacement[0]][playerPlacement[1]+i] = 1;
-        }
-    } else if (!shipConst.isHorizontal && (playerPlacement[0]+ shipConst.size) < 9){
-        gridArray[playerString][playerPlacement[0]][playerPlacement[1]] = 1;
-        for(let i = 1; i <= shipConst.size; i++){
-            gridArray[playerString][playerPlacement[0]+i][playerPlacement[1]] = 1;
+    if (checkIfValidLocation(playerPlacement, playerString, shipConst)){
+        if (shipConst.isHorizontal && (playerPlacement[1]+ shipConst.size < 9)){
+            gridArray[playerString][playerPlacement[0]][playerPlacement[1]] = 1;
+            for(let i = 1; i <= shipConst.size; i++){
+                gridArray[playerString][playerPlacement[0]][playerPlacement[1]+i] = 1;
+            }
+        } else if (!shipConst.isHorizontal && (playerPlacement[0]+ shipConst.size < 9)){
+            gridArray[playerString][playerPlacement[0]][playerPlacement[1]] = 1;
+            for(let i = 1; i <= shipConst.size; i++){
+                gridArray[playerString][playerPlacement[0]+i][playerPlacement[1]] = 1;
+            }
+        } else {
+            placeRandomShip(shipConst, playerString)
         }
     } else {
         placeRandomShip(shipConst, playerString)
@@ -331,8 +334,22 @@ function addBattlePhaseEventListeners(){
         }
 }
 
-function checkIfEmpty(array, playerString){
-
+function checkIfValidLocation(array, playerString, ship){
+    let allEmpty = true;
+    if (ship.isHorizontal && (array[1]+ ship.size < 9)){
+        for (let i = 1; i < ship.size; i++){
+            if ((gridArray[playerString][array[0]][(array[1]+i)]) !== 0){
+                allEmpty = false;
+            } 
+        }
+    } else if (!ship.isHorizontal && (array[0] + ship.size < 9)){
+        for (let i = 1; i < ship.size; i++){
+            if ((gridArray[playerString][(array[0]+i)][array[1]]) !== 0){
+                allEmpty = false;
+            } 
+        }
+    }
+    return allEmpty;
 }
 
 // //Event listener to highlight grid cells as you hover over them.
@@ -379,8 +396,22 @@ function checkIfEmpty(array, playerString){
 // }
 
 function setupPhase(){
+    const shipyardEl = document.createElement('div');
+    shipyardEl.id = 'shipyard';
+    const randomButtonEl = document.createElement('button');
+    randomButtonEl.id = 'randomize-player';
+    randomButtonEl.textContent = "RANDOMIZE YOUR FLEET'S LOCATION";
+    const submitButtonEl = document.createElement('button');
+    submitButtonEl.id = 'submit-player';
+    submitButtonEl.textContent = "SUBMIT YOUR FLEET'S CURRENT LOCATIONS";
+    shipyardEl.appendChild(randomButtonEl);
+    shipyardEl.appendChild(submitButtonEl);
     setupRandomComputer();
-    setupPlayerPhase();
+    randomButtonEl.addEventListener('click',setupPlayerPhase);
+
+    submitButtonEl.addEventListener('click', function(){
+        turnStatus = 'player';
+    })
     render();
 }
 
@@ -400,8 +431,4 @@ function setupPlayerPhase(){
         })
     }
     render();
-}
-
-function acceptLayout(){
-    turnStatus = 'player';
 }
