@@ -354,24 +354,31 @@ function highlightShipPlacement(evt){
     }
     let row = Number(startGrid[0]);
     let column = Number(startGrid[1]);
+    console.log(row , column);
     let ship = ships[setupPhaseStatus];
 
-    if(turnStatus = 'setup' && checkIfValidLocation([row,column],'player',ship)){
+    if(turnStatus = 'setup' && checkIfValidLocation([row,column],'player', ship)){
         evt.target.classList.add('hover');
         if (ship.isHorizontal && row === 0){
             for (let i = 1; i <= ship.size; i++){
                 let id = 'p'+(column+i);
-                document.getElementById(id).classList.add('hover');
+                if (column+i <10){
+                    document.getElementById(id).classList.add('hover');
+                }
             }
         } else if (ship.isHorizontal && row !== 0){
             for (let i = 1; i <= ship.size; i++){
                 let id = 'p'+ row + (column+i);
-                document.getElementById(id).classList.add('hover');
+                if (row < 10 && column+i <10){
+                    document.getElementById(id).classList.add('hover');
+                }
             }
         } else {
             for (let i = 1; i <= ship.size; i++){
                 let id = 'p'+ (row+i) + column;
-                document.getElementById(id).classList.add('hover');
+                if (row+i < 10 && column <10){
+                    document.getElementById(id).classList.add('hover');
+                }
             }    
         }
     }
@@ -394,17 +401,23 @@ function removeHighlightShipPlacement(evt){
         if (ship.isHorizontal && row === 0){
             for (let i = 1; i <= ship.size; i++){
                 let id = 'p'+(column+i);
-                document.getElementById(id).classList.remove('hover');
+                if (column+i <10){
+                    document.getElementById(id).classList.remove('hover');
+                }
             }
         } else if (ship.isHorizontal && row !== 0){
             for (let i = 1; i <= ship.size; i++){
                 let id = 'p'+ row + (column+i);
-                document.getElementById(id).classList.remove('hover');
+                if (row < 10 && column+i <10){
+                    document.getElementById(id).classList.remove('hover');
+                }
             }
         } else {
             for (let i = 1; i <= ship.size; i++){
                 let id = 'p'+ (row+i) + column;
-                document.getElementById(id).classList.remove('hover');
+                if (row+i < 10 && column <10){
+                    document.getElementById(id).classList.remove('hover');
+                }
             }    
         }
     }
