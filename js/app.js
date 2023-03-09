@@ -88,7 +88,7 @@ function render(){
         turnStatusEl.innerText = "SETUP PHASE"
         turnDescriptionEl.innerText = "PLACE YOUR SHIPS. PRESS 'F' TO ROTATE"
     } else if (turnStatus === 'player'){
-        turnDescriptionEl.innerText = '';
+        turnDescriptionEl.innerText = 'CLICK ON THE ENEMY BOARD TO DESTROY THEIR SHIPS';
         if (remainingPlayerShipGrids === 0){
             winner = 'computer';
             turnStatus = 'end-screen';
@@ -97,7 +97,7 @@ function render(){
             addBattlePhaseEventListeners();
         }
     } else if (turnStatus === 'computer'){
-        turnDescriptionEl.innerText = '';
+        turnDescriptionEl.innerText = 'TAKE COVER!';
         if (remainingComputerShipGrids === 0){
             winner = 'player';
             turnStatus = 'end-screen';
@@ -151,6 +151,7 @@ function playerAttack(evt){
     updateBattleInfo();
     render();
     }
+    render();
 }
 
 function computerTurn(){
