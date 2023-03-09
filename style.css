@@ -147,3 +147,26 @@ button {
     position: absolute;
     background-repeat: repeat-y;
 }
+
+.ship-info {
+    font-family: 'Chakra Petch', sans-serif;
+    color: white;
+}
+#player-remaining{
+    grid-row: 4/5;
+    grid-column: 2/3;
+    text-align: center;
+    margin: 50px 0px 0px 0px;
+}
+
+#computer-remaining{
+    grid-column: 2/3;
+    grid-row: 2/3;
+    text-align: center;
+    margin: 425px 0 0 0;
+}
+
+#reset-button{
+    grid-column:4/5;
+    grid-row:3/4;
+}

@@ -102,6 +102,7 @@ function render(){
             turnStatusEl.innerText = "COMPUTER IS THINKING..."
         }
     } else if (turnStatus === 'end-screen'){
+        generateResetButton();
         turnStatusEl.innerText = `${winner.toUpperCase()} WINS!`
     }
 }
@@ -121,6 +122,7 @@ function setupPhase(){
 }
 
 function playerAttack(evt){
+    if (!winner){
         let gridId = evt.target.id;
         gridId = gridId.slice(1);
         let gridIdArray;
@@ -144,41 +146,45 @@ function playerAttack(evt){
         }
     updateBattleInfo();
     render();
+    }
 }
 
 function computerTurn(){
-    if (turnStatus === 'computer' && computerDifficulty === 'easy'){
-        //write auto firing code
-        let computerFire;
+    if (!winner){
+        if (turnStatus === 'computer' && computerDifficulty === 'easy'){
+            //write auto firing code
+            let computerFire;
 
-        do {
-            computerFire = randomGrid();
-        } while (!emptyOrShip(computerFire,'player'))
+            do {
+                computerFire = randomGrid();
+            } while (!emptyOrShip(computerFire,'player'))
 
-        if (gridArray.player[computerFire[0]][computerFire[1]] === 0){
-            gridArray.player[computerFire[0]][computerFire[1]] = 3;
+            if (gridArray.player[computerFire[0]][computerFire[1]] === 0){
+                gridArray.player[computerFire[0]][computerFire[1]] = 3;
+            } else {
+                gridArray.player[computerFire[0]][computerFire[1]] = 2;
+            }
+            turnStatus = 'player';
+            render();
+        } else if (turnStatus === 'computer' && computerDifficulty === 'hard'){
+            //write auto firing code
+            let computerFire;
+            computerFire = findShip('player');
+
+            if (gridArray.player[computerFire[0]][computerFire[1]] === 0){
+                gridArray.player[computerFire[0]][computerFire[1]] = 3;
+            } else {
+                gridArray.player[computerFire[0]][computerFire[1]] = 2;
+            }
+            turnStatus = 'player';
+            render();
         } else {
-            gridArray.player[computerFire[0]][computerFire[1]] = 2;
+            render();
+            setTimeout(computerTurn, 750);
         }
-        turnStatus = 'player';
         render();
-    } else if (turnStatus === 'computer' && computerDifficulty === 'hard'){
-        //write auto firing code
-        let computerFire;
-        computerFire = findShip('player');
-
-        if (gridArray.player[computerFire[0]][computerFire[1]] === 0){
-            gridArray.player[computerFire[0]][computerFire[1]] = 3;
-        } else {
-            gridArray.player[computerFire[0]][computerFire[1]] = 2;
-        }
-        turnStatus = 'player';
-        render();
-    } else {
-        render();
-        setTimeout(computerTurn, 750);
+        updateBattleInfo();
     }
-    updateBattleInfo();
 }
 
 function randomGrid(){
@@ -489,26 +495,33 @@ function clearUserShips(){
 
 function createBattleInfo(){
         computerRemainingEl = document.createElement('div');
-        const shotsTakenEl = document.createElement('div');
         computerRemainingEl.id = 'computer-remaining';
-        computerRemainingEl.textContent = `GRIDS STILL CONTAINING ENEMY SHIPS: ${remainingComputerShipGrids}`
+        computerRemainingEl.classList.add('ship-info');
+        computerRemainingEl.innerHTML = `GRIDS STILL CONTAINING ENEMY SHIPS: <br> ${remainingComputerShipGrids}`
         document.querySelector('body').appendChild(computerRemainingEl);
 
+        playerRemainingShipEl = document.createElement('div');
+        playerRemainingShipEl.classList.add('ship-info');
+        playerRemainingShipEl.id = 'player-remaining';
+        playerRemainingShipEl.innerHTML = `GRIDS STILL CONTAINING FRIENDLY SHIPS: <br> ${remainingPlayerShipGrids}`
+        document.querySelector('body').appendChild(playerRemainingShipEl);
+
+
         phaseEl = document.createElement('h1');
-
-
 }
 
 function updateBattleInfo(){
     remainingComputerShipGrids = document.querySelectorAll('#computer .ship').length;
     remainingPlayerShipGrids = document.querySelectorAll('#player .ship').length;
-    computerRemainingEl.textContent = `GRIDS STILL CONTAINING ENEMY SHIPS: ${remainingComputerShipGrids}`
+    computerRemainingEl.innerHTML = `GRIDS STILL CONTAINING ENEMY SHIPS: <br> ${remainingComputerShipGrids}`
+    playerRemainingShipEl.innerHTML = `GRIDS STILL CONTAINING FRIENDLY SHIPS: <br> ${remainingPlayerShipGrids}`
 }
 
 function moveToBattle(){
     if (!(setupPhaseStatus < ships.length)){
         turnStatus = 'player';
         document.querySelector('body').removeChild(document.querySelector('#shipyard'));
+        updateBattleInfo();
         render();
     }
 }
@@ -558,4 +571,17 @@ function createStartScreen(){
     startScreen.appendChild(startButtonEl);
     document.querySelector('body').appendChild(startScreen);
     
+}
+
+function generateResetButton(){
+    resetEl = document.createElement('button');
+    resetEl.innerText = 'START NEW GAME';
+    resetEl.id = 'reset-button';
+    resetEl.addEventListener('click',resetGame);
+    document.querySelector('body').appendChild(resetEl);
+
+}
+
+function resetGame(){
+    window.location.reload();
 }
