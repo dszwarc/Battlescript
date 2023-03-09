@@ -1,5 +1,3 @@
-console.log('JS TEST MAIN BRANCH')
-
 //Declare Variables
 const turnChoices = ['setup', 'player', 'computer', 'end-screen'];
 let turnStatus = 'start-screen';
@@ -549,7 +547,7 @@ function createStartScreen(){
 
     const titleEl = document.createElement('h1');
     titleEl.id = 'title';
-    titleEl.textContent = 'BATTLESCRIPTS';   
+    titleEl.textContent = 'BATTLESCRIPT';   
     
     const startButtonEl = document.createElement('button');
     startButtonEl.id = "start-button";

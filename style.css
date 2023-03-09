@@ -1,23 +1,26 @@
 
 body {
     display: grid;
-    grid-template-columns: 1fr 200px 1fr 200px 1fr;
+    grid-template-columns: 1fr 200px auto 200px 1fr;
     grid-template-rows: 100px 500px 100px auto 200px;
     height: 100vh;
-    background-color: rgb(44, 51, 53);
+    background-image: url("https://i.imgur.com/AWRkMhc.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin:20px;
 }
 
-
 td {
-    border: 1px solid rgb(61, 161, 14);
+    border: 1px solid rgba(35, 203, 23, 0.702);
     width: 2.5em;
     height: 2.5em;
-    background-color:rgb(19, 41, 64);
-    background-image: radial-gradient(45, rgb(75, 138, 201), rgb(192, 224, 255));
+    background-image: linear-gradient(45deg, rgba(15, 49, 84, 0.47), rgba(60, 103, 147, 0.436));
 }
 
 #player .ship{
-    background-color: rgb(133, 133, 133);
+    background-image: linear-gradient(45deg, rgb(54, 54, 54),rgb(41, 98, 42));
+
     margin: .25em;
     padding-top: -1em;
 }
@@ -27,15 +30,25 @@ td {
 }
 
 .miss{
-    background-color: rgba(255, 255, 255, 0.821);
+    background-image: url("https://i.imgur.com/PEKqchq.png");
+    background-size:10em;
+    background-position: center;
+    width:auto;
+    height:auto;
+    background-color: rgb(194, 194, 194);
 }
 
 .hit{
     background-image: url("https://i.imgur.com/9cr6mCz.png");
-    background-color: rgba(255, 0, 0, 0.84);
+    background-size:4em;
+    background-position: center;
+    width:auto;
+    height:auto;
+    background-color: brown;
 }
 
 .hover {
+    background-image: none;
     background-color: rgba(98, 255, 0, 0.555);
 }
 
@@ -65,6 +78,8 @@ tbody{
     position: relative;
     width: fixed;
     height: fixed;
+    color:rgb(80, 203, 23);
+    font-family: 'Chakra Petch', sans-serif;
 }
 
 th {
@@ -81,6 +96,8 @@ th {
     grid-column: 3/4;
     display: flex;
     justify-content: center;
+    font-family: 'Chakra Petch', sans-serif;
+    color:rgb(80, 203, 23);
 }
 #shipyard{
     background-color: rgb(52, 69, 53);
@@ -121,4 +138,12 @@ button {
     font-size:large;
     width: 200px;
     height: 50px;
+}
+
+#background{
+    background-position: center;
+    object-fit: cover;
+    z-index:-1;
+    position: absolute;
+    background-repeat: repeat-y;
 }
