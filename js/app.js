@@ -448,17 +448,17 @@ function createSetupControls(){
 
     const randomButtonEl = document.createElement('button');
     randomButtonEl.id = 'randomize-player';
-    randomButtonEl.textContent = "RANDOMIZE YOUR FLEET'S LOCATION";
+    randomButtonEl.textContent = "RANDOM LAYOUT";
     randomButtonEl.addEventListener('click', setupPlayerPhase);
 
     const submitButtonEl = document.createElement('button');
     submitButtonEl.id = 'submit-player';
-    submitButtonEl.textContent = "SUBMIT YOUR FLEET'S CURRENT LOCATIONS";
+    submitButtonEl.textContent = "START GAME";
     submitButtonEl.addEventListener('click', moveToBattle);
 
     const resetButton = document.createElement('button');
     resetButton.addEventListener('click', clearUserShips);
-    resetButton.textContent = 'RESET YOUR FIELD';
+    resetButton.textContent = 'RESET';
 
     shipyardEl.appendChild(randomButtonEl);
     shipyardEl.appendChild(submitButtonEl);

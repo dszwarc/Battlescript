@@ -3,13 +3,16 @@ body {
     display: grid;
     grid-template-columns: 1fr 200px auto 200px 1fr;
     grid-template-rows: 100px 500px 100px auto 200px;
-    height: 100vh;
+    height: 130vh;
+    background-color: black;
     background-image: url("https://i.imgur.com/AWRkMhc.jpg");
     background-position: center;
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: auto 100%;
     margin:20px;
 }
+
+
 
 td {
     border: 1px solid rgba(35, 203, 23, 0.702);
@@ -20,7 +23,6 @@ td {
 
 #player .ship{
     background-image: linear-gradient(45deg, rgb(81, 81, 81),rgb(58, 136, 62));
-
     margin: .25em;
     padding-top: -1em;
 }
@@ -105,7 +107,7 @@ th {
 }
 
 #shipyard{
-    background-color: rgb(52, 69, 53);
+    background-color: rgba(80, 203, 23, 0.607);
     border: solid black 3px;
     display: flex;
     justify-content: space-evenly;
@@ -113,7 +115,8 @@ th {
     align-items: center;
     grid-column: 4/5;
     grid-row: 4/5;
-    margin:0px 100px 0px 150px;
+    margin:55px 35px 55px 35px;
+    border-radius: 10px;
 }
 
 button {
@@ -121,6 +124,7 @@ button {
     width: 100px;
     background-color: black;
     color: white;
+    border-radius: 10px;
 }
 
 #start-area{
