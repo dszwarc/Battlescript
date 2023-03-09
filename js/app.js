@@ -86,7 +86,9 @@ function render(){
     const turnDescriptionEl = document.getElementById('turn-description')
     if (turnStatus === 'setup'){
         turnStatusEl.innerText = "SETUP PHASE"
+        turnDescriptionEl.innerText = "PLACE YOUR SHIPS. PRESS 'F' TO ROTATE"
     } else if (turnStatus === 'player'){
+        turnDescriptionEl.innerText = '';
         if (remainingPlayerShipGrids === 0){
             winner = 'computer';
             turnStatus = 'end-screen';
@@ -95,6 +97,7 @@ function render(){
             addBattlePhaseEventListeners();
         }
     } else if (turnStatus === 'computer'){
+        turnDescriptionEl.innerText = '';
         if (remainingComputerShipGrids === 0){
             winner = 'player';
             turnStatus = 'end-screen';
@@ -102,6 +105,7 @@ function render(){
             turnStatusEl.innerText = "COMPUTER IS THINKING..."
         }
     } else if (turnStatus === 'end-screen'){
+        turnDescriptionEl.innerText = '';
         generateResetButton();
         turnStatusEl.innerText = `${winner.toUpperCase()} WINS!`
     }
