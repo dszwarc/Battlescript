@@ -6,10 +6,23 @@ body {
     height: 100vh;
 }
 
-.ship{
-    background-color: grey;
+
+td {
+    border: 1px solid white;
+    width: 2.5em;
+    height: 2.5em;
+    background-color:rgb(75, 138, 201);
+    background-image: radial-gradient(45, rgb(75, 138, 201), rgb(192, 224, 255));
+}
+
+#player .ship{
+    background-color: rgb(62, 62, 62);
     margin: .25em;
     padding-top: -1em;
+}
+
+#computer td{
+    background-color: none;
 }
 
 .miss{
@@ -21,9 +34,6 @@ body {
     background-color: red;
 }
 
-.board {
-    background-color: aquamarine;
-}
 .hover {
     background-color: rgb(255, 238, 0);
 }
@@ -62,12 +72,7 @@ th {
     margin: 10px;    
 }
 
-td {
-    border: 1px solid white;
-    width: 2.5em;
-    height: 2.5em;
-    background-color:rgb(75, 138, 201);
-}
+
 
 
 

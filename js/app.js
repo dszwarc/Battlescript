@@ -1,7 +1,7 @@
 //Declare Variables
 const turnChoices = ['setup', 'player', 'computer', 'end-screen', 'start-screen'];
 let turnStatus;
-
+let computerDifficulty = 'hard';
 //size of the board (size x size)
 const size = 10;
 
@@ -20,11 +20,11 @@ class Ship {
     }
 }
 
-const destroyer = new Ship('destroyer', 2);
-const cruiser = new Ship('cruiser', 3)
-const submarine = new Ship('submarine', 3);
-const battleship = new Ship('battleship',4);
-const carrier = new Ship('carrier',5);
+const destroyer = new Ship('destroyer', 1);
+const cruiser = new Ship('cruiser', 2)
+const submarine = new Ship('submarine', 2);
+const battleship = new Ship('battleship',3);
+const carrier = new Ship('carrier',4);
 const ships = [];
 ships.push(destroyer, cruiser, submarine, battleship, carrier);
 
@@ -43,48 +43,6 @@ const totalTargets = document.querySelectorAll('#computer .ship').length;
 let remainingComputerShipGrids = document.querySelectorAll('#computer .ship').length;
 let remainingPlayerShipGrids = document.querySelectorAll('#player .ship').length;
 render();
-// //Event listener to highlight grid cells as you hover over them.
-// if (turnStatus === 'setup'){
-//     for (y in gridSpaces){
-//         for (let i = 0; i < gridSpaces[y].length; i++){
-//             gridSpaces[y][i].addEventListener('mouseenter', function(e){
-//                 e.target.classList.add('hover');
-//                 // let tempTest = e.target.id
-//                 // console.log(tempTest, "this is the cell you're on")
-//                 // tempTest = tempTest.slice(1);
-//                 // tempTest = Number(tempTest)+1;
-//                 // tempTest = tempTest.toString();
-//                 // tempTest = 'c'+tempTest;
-//                 // document.getElementById(tempTest).classList.add('hover');
-//             },100);
-//             gridSpaces[y][i].addEventListener('mouseout', function(e){
-//                 e.target.classList.remove('hover');
-//                 // let tempTest = e.target.id
-//                 // console.log(tempTest, "this is the cell you're on")
-//                 // tempTest = tempTest.slice(1);
-//                 // tempTest = Number(tempTest)+1;
-//                 // tempTest = tempTest.toString();
-//                 // tempTest = 'c'+tempTest;
-//                 // document.getElementById(tempTest).classList.remove('hover');
-//             },100);
-//             gridSpaces[y][i].addEventListener('click', testclick)
-//         }
-//     }
-// } else if (turnStatus === 'player'){
-//     for (y in gridSpaces){
-//         for (let i = 0; i < gridSpaces[y].length; i++){
-//             gridSpaces[y][i].addEventListener('mouseenter', function(e){
-//                 e.target.classList.add('hover');
-//             },100);
-//             gridSpaces[y][i].addEventListener('mouseout', function(e){
-//                 e.target.classList.remove('hover');
-//             },100);
-//             gridSpaces[y][i].addEventListener('click', clickBoard)
-//         }
-//     }
-// } else if (turnStatus = 'computer'){
-//     computerTurn();
-// }
 
 //---------- Functions ------------//
 
@@ -162,13 +120,25 @@ function playerAttack(evt){
 }
 
 function computerTurn(){
-    if (turnStatus === 'computer'){
+    if (turnStatus === 'computer' && computerDifficulty === 'easy'){
         //write auto firing code
         let computerFire;
 
         do {
             computerFire = randomGrid();
         } while (!emptyOrShip(computerFire,'player'))
+
+        if (gridArray.player[computerFire[0]][computerFire[1]] === 0){
+            gridArray.player[computerFire[0]][computerFire[1]] = 3;
+        } else {
+            gridArray.player[computerFire[0]][computerFire[1]] = 2;
+        }
+        turnStatus = 'player';
+        render();
+    } else if (turnStatus === 'computer' && computerDifficulty === 'hard'){
+        //write auto firing code
+        let computerFire;
+        computerFire = findShip('player');
 
         if (gridArray.player[computerFire[0]][computerFire[1]] === 0){
             gridArray.player[computerFire[0]][computerFire[1]] = 3;
@@ -187,6 +157,14 @@ function randomGrid(){
     let row = Math.floor(Math.random()*size);
     let column = Math.floor(Math.random()*size);
     return [row,column];
+}
+
+function findShip(playerString){
+    let array;
+    do {
+        array = randomGrid();
+    } while (gridArray[playerString][array[0]][array[1]] !== 1)
+    return array;
 }
 
 function emptyOrShip(array, player){
@@ -313,13 +291,13 @@ function addBattlePhaseEventListeners(){
 function checkIfValidLocation(array, playerString, ship){
     let allEmpty = true;
     if (ship.isHorizontal && (array[1]+ ship.size < 9)){
-        for (let i = 0; i < ship.size; i++){
+        for (let i = 0; i <= ship.size; i++){
             if ((gridArray[playerString][array[0]][(array[1]+i)]) !== 0){
                 allEmpty = false;
             } 
         }
     } else if (!ship.isHorizontal && (array[0] + ship.size < 9)){
-        for (let i = 0; i < ship.size; i++){
+        for (let i = 0; i <= ship.size; i++){
             if ((gridArray[playerString][(array[0]+i)][array[1]]) !== 0){
                 allEmpty = false;
             } 
@@ -330,7 +308,6 @@ function checkIfValidLocation(array, playerString, ship){
 
 function rotateShip(event){
     let key = event.key;
-    console.log(key);
     if (key == 'f'){
         ships[setupPhaseStatus].isHorizontal = !ships[setupPhaseStatus].isHorizontal;
     }
