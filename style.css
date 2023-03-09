@@ -1,7 +1,7 @@
 
 body {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 200px 1fr 200px 1fr;
     grid-template-rows: 100px 500px 100px auto 200px;
     height: 100vh;
     background-color: rgb(44, 51, 53);
@@ -47,7 +47,7 @@ td {
     align-items: center;
     border-spacing: 0px;
     grid-row: 2/3;
-    grid-column: 2/3;
+    grid-column: 3/4;
 }
 
 #player {
@@ -57,8 +57,7 @@ td {
     justify-content: center;
     align-items: center;
     border-spacing: 0px;
-    grid-row: 2/3;
-    grid-column: 2/3;
+    grid-column: 3/4;
     grid-row: 4/5;
 }
 
@@ -73,32 +72,13 @@ th {
     margin: 10px;    
 }
 
-
-
-
-
-#destroyer{
-    width:30px;
-    height:120px;
-}
-
-#submarine{
-    width:30px;
-    height:120px;
-}
-
-#battleship{
-    width: 30px;
-    height: 210px;
-}
-
 .dragging{
     cursor: move;
 }
 
 #phase{
     grid-row: 3/4;
-    grid-column: 2/3;
+    grid-column: 3/4;
     display: flex;
     justify-content: center;
 }
@@ -109,7 +89,7 @@ th {
     justify-content: space-evenly;
     flex-direction: column;
     align-items: center;
-    grid-column: 3/4;
+    grid-column: 4/5;
     grid-row: 4/5;
     margin:0px 100px 0px 150px;
 }
@@ -119,4 +99,26 @@ button {
     width: 100px;
     background-color: black;
     color: white;
+}
+
+#start-area{
+    grid-column: 3/4;
+    grid-row: 2/3;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#title{
+    font-family: 'Climate Crisis', cursive;
+    color: white;
+    font-size: 100px;
+}
+
+#start-button{
+    font-family: 'Chakra Petch', sans-serif;
+    font-size:large;
+    width: 200px;
+    height: 50px;
 }

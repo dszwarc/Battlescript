@@ -1,5 +1,5 @@
 //Declare Variables
-const turnChoices = ['setup', 'player', 'computer', 'end-screen', 'start-screen'];
+const turnChoices = ['setup', 'player', 'computer', 'end-screen'];
 let turnStatus = 'start-screen';
 let computerDifficulty = 'easy';
 let computerRemainingEl;
@@ -41,6 +41,8 @@ let shipEls;
 let gridSpaces = {};
 let totalTargets;
 
+createStartScreen();
+
 //---------- Functions ------------//
 
 function runGame(){
@@ -53,6 +55,7 @@ function runGame(){
     }
     totalTargets = document.querySelectorAll('#computer .ship').length;
 
+    document.querySelector('body').removeChild(document.querySelector('#start-area'));
     render();
     setupPhase();
 
@@ -536,4 +539,23 @@ function placeShipManual(evt){
         }
     }
     render();
+}
+
+function createStartScreen(){
+    const startScreen = document.createElement('div');
+    startScreen.id='start-area';
+
+    const titleEl = document.createElement('h1');
+    titleEl.id = 'title';
+    titleEl.textContent = 'BATTLESCRIPTS';   
+    
+    const startButtonEl = document.createElement('button');
+    startButtonEl.id = "start-button";
+    startButtonEl.addEventListener('click',runGame);
+    startButtonEl.textContent = 'START GAME'
+
+    startScreen.appendChild(titleEl);
+    startScreen.appendChild(startButtonEl);
+    document.querySelector('body').appendChild(startScreen);
+    
 }
