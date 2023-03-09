@@ -3,13 +3,12 @@ body {
     display: grid;
     grid-template-columns: 1fr 200px auto 200px 1fr;
     grid-template-rows: 100px 500px 100px auto 200px;
-    height: 130vh;
+    /* height: 80vh; */
     background-color: black;
     background-image: url("https://i.imgur.com/AWRkMhc.jpg");
-    background-position: center;
+    background-position: cover;
     background-repeat: no-repeat;
-    background-size: auto 100%;
-    margin:20px;
+    background-size: auto auto;
 }
 
 
@@ -178,4 +177,15 @@ button {
 #reset-button{
     grid-column:4/5;
     grid-row:3/4;
+}
+
+@media only screen and (min-width: 1000px){
+    body{
+        height: 100vh;
+        background-color: black;
+        background-image: url("https://i.imgur.com/AWRkMhc.jpg");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
 }
