@@ -1,3 +1,5 @@
+console.log('JS TEST MAIN BRANCH')
+
 //Declare Variables
 const turnChoices = ['setup', 'player', 'computer', 'end-screen'];
 let turnStatus = 'start-screen';
