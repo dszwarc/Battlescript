@@ -1,7 +1,10 @@
 //Declare Variables
 const turnChoices = ['setup', 'player', 'computer', 'end-screen', 'start-screen'];
-let turnStatus;
-let computerDifficulty = 'hard';
+let turnStatus = 'start-screen';
+let computerDifficulty = 'easy';
+let computerRemainingEl;
+let remainingComputerShipGrids;
+let remainingPlayerShipGrids;
 //size of the board (size x size)
 const size = 10;
 
@@ -20,6 +23,7 @@ class Ship {
     }
 }
 
+let phaseEl;
 const destroyer = new Ship('destroyer', 1);
 const cruiser = new Ship('cruiser', 2)
 const submarine = new Ship('submarine', 2);
@@ -32,19 +36,28 @@ ships.push(destroyer, cruiser, submarine, battleship, carrier);
 let setupPhaseStatus = 0;
 const setupPhaseChoices = ['destroyer', 'cruiser', 'submarine', 'battleship', 'carrier'];
 let winner = null;
-init(size);
 
-const shipEls = document.querySelectorAll('.ship');
-const gridSpaces = {
-    player: document.querySelectorAll('#player td'),
-    computer: document.querySelectorAll('#computer td')
-}
-const totalTargets = document.querySelectorAll('#computer .ship').length;
-let remainingComputerShipGrids = document.querySelectorAll('#computer .ship').length;
-let remainingPlayerShipGrids = document.querySelectorAll('#player .ship').length;
-render();
+let shipEls;
+let gridSpaces = {};
+let totalTargets;
 
 //---------- Functions ------------//
+
+function runGame(){
+    init(size);
+    shipEls = document.querySelectorAll('.ship');
+
+    gridSpaces = {
+    player: document.querySelectorAll('#player td'),
+    computer: document.querySelectorAll('#computer td')
+    }
+    totalTargets = document.querySelectorAll('#computer .ship').length;
+
+    render();
+    setupPhase();
+
+  
+}
 
 //initialize function
 function init(){
@@ -61,8 +74,6 @@ function init(){
     generateTable('computer');
     generateTable('player');
 }
-setupPhase();
-
 //render
 function render(){
     updateGridArray();
@@ -90,7 +101,20 @@ function render(){
     } else if (turnStatus === 'end-screen'){
         turnStatusEl.innerText = `${winner.toUpperCase()} WINS!`
     }
-   
+}
+
+function setupPhase(){
+    createSetupControls();
+    setupRandomComputer();
+
+    document.addEventListener('keydown', rotateShip);
+
+    gridSpaces.player.forEach(e =>{
+        e.addEventListener('mouseenter',highlightShipPlacement);
+        e.addEventListener('mouseout', removeHighlightShipPlacement);
+    })
+    createBattleInfo();
+    render();
 }
 
 function playerAttack(evt){
@@ -115,7 +139,7 @@ function playerAttack(evt){
         } else {
 
         }
-    
+    updateBattleInfo();
     render();
 }
 
@@ -151,6 +175,7 @@ function computerTurn(){
         render();
         setTimeout(computerTurn, 750);
     }
+    updateBattleInfo();
 }
 
 function randomGrid(){
@@ -361,7 +386,6 @@ function highlightShipPlacement(evt){
     }
 }
 
-
 function removeHighlightShipPlacement(evt){
     if (setupPhaseStatus < 5){
         let startGrid = evt.target.id;
@@ -401,23 +425,6 @@ function removeHighlightShipPlacement(evt){
             }
         }
     }
-}
-
-
-
-
-function setupPhase(){
-    createSetupControls();
-    setupRandomComputer();
-
-    document.addEventListener('keydown', rotateShip);
-
-    gridSpaces.player.forEach(e =>{
-        e.addEventListener('mouseenter',highlightShipPlacement);
-        e.addEventListener('mouseout', removeHighlightShipPlacement);
-    })
-    
-    render();
 }
 
 function createSetupControls(){
@@ -478,21 +485,29 @@ function clearUserShips(){
 }
 
 function createBattleInfo(){
-        const computerRemainingEl = document.createElement('div');
+        computerRemainingEl = document.createElement('div');
         const shotsTakenEl = document.createElement('div');
         computerRemainingEl.id = 'computer-remaining';
         computerRemainingEl.textContent = `GRIDS STILL CONTAINING ENEMY SHIPS: ${remainingComputerShipGrids}`
+        document.querySelector('body').appendChild(computerRemainingEl);
+
+        phaseEl = document.createElement('h1');
+
 
 }
 
 function updateBattleInfo(){
+    remainingComputerShipGrids = document.querySelectorAll('#computer .ship').length;
+    remainingPlayerShipGrids = document.querySelectorAll('#player .ship').length;
     computerRemainingEl.textContent = `GRIDS STILL CONTAINING ENEMY SHIPS: ${remainingComputerShipGrids}`
 }
 
 function moveToBattle(){
-    turnStatus = 'player';
-    document.querySelector('body').removeChild(document.querySelector('#shipyard'));
-    render();
+    if (!(setupPhaseStatus < ships.length)){
+        turnStatus = 'player';
+        document.querySelector('body').removeChild(document.querySelector('#shipyard'));
+        render();
+    }
 }
 
 function placeShipManual(evt){

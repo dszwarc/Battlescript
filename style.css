@@ -4,19 +4,20 @@ body {
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 100px 500px 100px auto 200px;
     height: 100vh;
+    background-color: rgb(44, 51, 53);
 }
 
 
 td {
-    border: 1px solid white;
+    border: 1px solid rgb(61, 161, 14);
     width: 2.5em;
     height: 2.5em;
-    background-color:rgb(75, 138, 201);
+    background-color:rgb(19, 41, 64);
     background-image: radial-gradient(45, rgb(75, 138, 201), rgb(192, 224, 255));
 }
 
 #player .ship{
-    background-color: rgb(62, 62, 62);
+    background-color: rgb(133, 133, 133);
     margin: .25em;
     padding-top: -1em;
 }
@@ -26,16 +27,16 @@ td {
 }
 
 .miss{
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.821);
 }
 
 .hit{
     background-image: url("https://i.imgur.com/9cr6mCz.png");
-    background-color: red;
+    background-color: rgba(255, 0, 0, 0.84);
 }
 
 .hover {
-    background-color: rgb(255, 238, 0);
+    background-color: rgba(98, 255, 0, 0.555);
 }
 
 #computer {
@@ -110,10 +111,12 @@ th {
     align-items: center;
     grid-column: 3/4;
     grid-row: 4/5;
-    margin:0px 300px 0px 150px;
+    margin:0px 100px 0px 150px;
 }
 
 button {
-    height: 200px;
-    width: 200px;
+    height: 100px;
+    width: 100px;
+    background-color: black;
+    color: white;
 }
