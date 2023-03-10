@@ -110,7 +110,7 @@ function render(){
         turnStatusEl.innerText = `${winner.toUpperCase()} WINS!`
     }
 }
-
+//Enter setup phase
 function setupPhase(){
     createSetupControls();
     setupRandomComputer();
@@ -124,7 +124,7 @@ function setupPhase(){
     createBattleInfo();
     render();
 }
-
+//Function to control what happens when the player clicks on their board, during their turn
 function playerAttack(evt){
     if (!winner){
         let gridId = evt.target.id;
@@ -153,7 +153,7 @@ function playerAttack(evt){
     }
     render();
 }
-
+//Controls computer AI and defines what happens on their turn
 function computerTurn(){
     if (!winner){
         if (turnStatus === 'computer' && computerDifficulty === 'easy'){
@@ -191,13 +191,13 @@ function computerTurn(){
         updateBattleInfo();
     }
 }
-
+//Chooses a random grid location
 function randomGrid(){
     let row = Math.floor(Math.random()*size);
     let column = Math.floor(Math.random()*size);
     return [row,column];
 }
-
+//Used for finding a ship (part of impossible mode AI)
 function findShip(playerString){
     let array;
     do {
@@ -205,11 +205,11 @@ function findShip(playerString){
     } while (gridArray[playerString][array[0]][array[1]] !== 1)
     return array;
 }
-
+//Finds a cell that is not a hit or miss (a valid option to fire for CPU)
 function emptyOrShip(array, player){
     return gridArray[player][array[0]][array[1]] === 0 || gridArray[player][array[0]][array[1]] === 1 ? true:false;
 }
-
+//Finds a grid that is empty
 function emptyGrid(playerString){
     let array;
     do {
@@ -261,12 +261,12 @@ function generateTable(tablename){
     document.querySelector('body').appendChild(table)
 
 }
-
+//Randomizes true false for help with random layout vertical/horizontal
 function trueFalse(){
     let test = Math.random();
     return test < .5 ? true : false;
 }
-
+//Rnadomly places ships for both player and user
 function placeRandomShip(shipConst, playerString){
     const playerPlacement = emptyGrid(playerString)
     shipConst.isHorizontal = trueFalse();
@@ -288,7 +288,7 @@ function placeRandomShip(shipConst, playerString){
         placeRandomShip(shipConst, playerString)
     }
 }
-
+//Updates the DOM based on grid array values
 function updateGridArray(){
     //Update table values
     for (k in gridArray){
@@ -314,7 +314,7 @@ function updateGridArray(){
         }
     }
 }
-
+//Adds listeners when leaving the setup phase
 function addBattlePhaseEventListeners(){
         for (let i = 0; i < gridSpaces.computer.length; i++){
             gridSpaces.computer[i].addEventListener('mouseenter', function(e){
@@ -326,7 +326,7 @@ function addBattlePhaseEventListeners(){
             gridSpaces.computer[i].addEventListener('click', playerAttack)
         }
 }
-
+//Checks to see if the desired placement location is outside the board or covering another ship
 function checkIfValidLocation(array, playerString, ship){
     let allEmpty = true;
     if (ship.isHorizontal && (array[1]+ ship.size < 9)){
@@ -344,7 +344,7 @@ function checkIfValidLocation(array, playerString, ship){
     }
     return allEmpty;
 }
-
+//Flips current ship's horizontal status
 function rotateShip(event){
     let key = event.key;
     if (key == 'f'){
@@ -358,7 +358,7 @@ function rotateShip(event){
         }
     }
 }
-
+//Highlights the cells of the ship you're placing by adding hover class to the cells
 function highlightShipPlacement(evt){
     if (setupPhaseStatus < 5){
         let startGrid = evt.target.id;
@@ -399,7 +399,7 @@ function highlightShipPlacement(evt){
         }
     }
 }
-
+//Removes highlights the cells of the ship you're placing by adding hover class to the cells
 function removeHighlightShipPlacement(evt){
     if (setupPhaseStatus < 5){
         let startGrid = evt.target.id;
@@ -440,7 +440,7 @@ function removeHighlightShipPlacement(evt){
         }
     }
 }
-
+//Adds HTML elements for buttons during setup
 function createSetupControls(){
     const shipyardEl = document.createElement('div');
     shipyardEl.id = 'shipyard';
@@ -466,7 +466,7 @@ function createSetupControls(){
 
     document.querySelector('#player').addEventListener('click', placeShipManual);
 }
-
+//Randomly generates board layout for CPU
 function setupRandomComputer(){ 
     if (turnStatus = 'setup'){
         ships.forEach(ship =>{
@@ -475,7 +475,7 @@ function setupRandomComputer(){
     }
     render();
 }
-
+//Logic for player setup. Allows manual placement, random placement, or reset
 function setupPlayerPhase(){
     if (turnStatus = 'setup'){
         clearUserShips();
@@ -486,7 +486,7 @@ function setupPlayerPhase(){
     }
     render();
 }
-
+//Clears player's ships and resets setup phase
 function clearUserShips(){
     for (let i = 0; i < size; i++){
         gridArray.player[i] = [0];
@@ -497,7 +497,7 @@ function clearUserShips(){
         setupPhaseStatus = 0;
         render();
 }
-
+//Creates tooltips for how many grids remaining
 function createBattleInfo(){
         computerRemainingEl = document.createElement('div');
         computerRemainingEl.id = 'computer-remaining';
@@ -514,14 +514,14 @@ function createBattleInfo(){
 
         phaseEl = document.createElement('h1');
 }
-
+//Updates the battle info tooltips
 function updateBattleInfo(){
     remainingComputerShipGrids = document.querySelectorAll('#computer .ship').length;
     remainingPlayerShipGrids = document.querySelectorAll('#player .ship').length;
     computerRemainingEl.innerHTML = `GRIDS STILL CONTAINING ENEMY SHIPS: <br> ${remainingComputerShipGrids}`
     playerRemainingShipEl.innerHTML = `GRIDS STILL CONTAINING FRIENDLY SHIPS: <br> ${remainingPlayerShipGrids}`
 }
-
+//Updates the DOM from setup to battle
 function moveToBattle(){
     if (!(setupPhaseStatus < ships.length)){
         turnStatus = 'player';
@@ -530,7 +530,7 @@ function moveToBattle(){
         render();
     }
 }
-
+//Allows manual placement of ships
 function placeShipManual(evt){
     if (setupPhaseStatus <5){
         const playerPlacement = evt.target.id.split('').slice(1);
@@ -558,7 +558,7 @@ function placeShipManual(evt){
     }
     render();
 }
-
+//Creates DOM elements for start screen
 function createStartScreen(){
     const startScreen = document.createElement('div');
     startScreen.id='start-area';
@@ -577,7 +577,7 @@ function createStartScreen(){
     document.querySelector('body').appendChild(startScreen);
     
 }
-
+//Creates new game button upon game win
 function generateResetButton(){
     resetEl = document.createElement('button');
     resetEl.innerText = 'START NEW GAME';
@@ -586,7 +586,7 @@ function generateResetButton(){
     document.querySelector('body').appendChild(resetEl);
 
 }
-
+//Resets the game
 function resetGame(){
     window.location.reload();
 }
