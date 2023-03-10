@@ -38,3 +38,4 @@ There are several features that were intended to be in the game but were not ful
 - [ ] Multiple difficulties for CPU
 - [ ] More intelligent AI (choosing cells near previous hits)
 - [ ] Multiplayer
+- [ ] Reorganize JS Functions
