@@ -15,6 +15,7 @@ The game keeps track of the number of "ship tiles" remaining on both side. Ship 
 |Submarine|3|
 |Destroyer|2|
 <br>
+
 ## Getting Started
 [Play Battlescript now!](https://dszwarc.github.io/Battlescript/)
 
